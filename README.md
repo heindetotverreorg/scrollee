@@ -1,7 +1,5 @@
-# Scrollee
-Manage scrapers and feeds to provide a single scrolling experience of your interests
-
 # Scrollee, get your feeds from whereveree
+Manage scrapers and feeds to provide a single scrolling experience of your interests
 
 # Concept
  - Login 

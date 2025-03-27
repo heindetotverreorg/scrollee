@@ -1427,30 +1427,33 @@ const errorDev = /*#__PURE__*/Object.freeze({
   template: template$1
 });
 
+const intervalIds = {};
 const _name_ = defineWebSocketHandler({
   open(peer) {
     console.log("Open", peer.toString());
-    peer.send(JSON.stringify({ type: "welcome", message: "Opened the socket test!" }));
-    peer.publish(peer.toString(), `${peer.toString()} has joined the socket test!`);
+    peer.send(JSON.stringify({ message: "Opening the socket" }));
     peer.subscribe(peer.toString());
   },
   message(peer, message) {
     const data = JSON.parse(message.toString());
+    let interval = 0;
     if (data.type === "sendTest") {
       peer.send(`Regular fetch: ${peer.toString()}: ${data.message}`);
     }
-    if (data.type === "intervalTest") {
-      let interval = 0;
-      setInterval(() => {
+    if (data.type === "startInterval") {
+      intervalIds[peer.toString()] = setInterval(() => {
         interval++;
         peer.send(`Interval fetch (${interval}): ${peer.toString()}: ${data.message} + ${interval}`);
       }, 2e3);
     }
+    if (data.type === "stopInterval") {
+      clearInterval(intervalIds[peer.toString()]);
+      interval = 0;
+    }
   },
   close(peer) {
     console.log("Close", peer.toString());
-    peer.send(JSON.stringify({ type: "goodbye", message: "Closed to the socket test!" }));
-    peer.publish(peer.toString(), `${peer.toString()} has left the socket test!`);
+    peer.send(JSON.stringify({ type: "goodbye", message: "Closing the socket" }));
     peer.unsubscribe(peer.toString());
   }
 });

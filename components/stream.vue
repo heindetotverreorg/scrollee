@@ -5,11 +5,14 @@
     <div v-if="status === 'OPEN'">
       <button @click="onClose">Close {{ streamName }}</button>
     </div>
-    <div>
-      <button @click="sendMessage('sendTest')">Receive data</button>
-    </div>
-    <div>  
-      <button @click="sendMessage('intervalTest')">Receive data on interval</button>
+    <div v-if="status === 'OPEN'">
+        <div>
+            <button @click="sendMessage('sendTest')">Receive data</button>
+        </div>
+        <div>  
+            <button @click="sendMessage('startInterval')">Receive data on interval</button>
+            <button @click="sendMessage('stopInterval')">Stop receiving data on interval</button>
+        </div>
     </div>
     status: {{ status }}
     data: {{ data }}
