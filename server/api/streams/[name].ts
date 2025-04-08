@@ -1,30 +1,41 @@
 import type { Peer, Message } from 'crossws';
+import { fetchScrapingResult } from '../scraper'
 
 const connections : Record<string, any> = {}
 const intervalIds : Record<string, any> = {}
 
 export default defineWebSocketHandler({
   open(peer: Peer) {
-    console.log('Open', peer.toString());
-
     peer.send(JSON.stringify({ message: 'Opening the socket' }));
 
     peer.subscribe(peer.toString());
   },
-  message(peer: Peer, message: Message) {
+  async message(peer: Peer, message: Message) {
     const data = JSON.parse(message.toString()); 
+
+    const { streamConfig } = data
 
     let interval = 0
 
     if (data.type === 'sendTest') {
-      peer.send(`Regular fetch: ${peer.toString()}: ${data.message}`);
+        const response = await fetchScrapingResult(streamConfig)
+        peer.send(`${JSON.stringify(response)}`);
     }
 
     if (data.type === 'startInterval') {
-        intervalIds[peer.toString()] = setInterval(() => {
+        const response = await fetchScrapingResult(streamConfig)
+        peer.send(`${JSON.stringify(response)}`);
+        
+        intervalIds[peer.toString()] = setInterval(async () => {
             interval++
-            peer.send(`Interval fetch (${interval}): ${peer.toString()}: ${data.message} + ${interval}`);
-        }, 2000);
+            try {
+                const response = await fetchScrapingResult(streamConfig)
+                peer.send(`${JSON.stringify(response)}`);
+            } catch(e) {
+                console.log(e)
+                peer.send(`Interval fetch (${interval}): ${peer.toString()}: Error: ${e} + ${interval}`);
+            }
+        }, 10000);
     }
 
     if (data.type === 'stopInterval') {
@@ -33,8 +44,6 @@ export default defineWebSocketHandler({
     }
   },
   close(peer: Peer) {
-    console.log('Close', peer.toString());
-
     peer.send(JSON.stringify({ type: 'goodbye', message: 'Closing the socket' }));
 
     peer.unsubscribe(peer.toString());
