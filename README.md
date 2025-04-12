@@ -19,18 +19,17 @@ yarn install
 This will install dependencies for both workspaces.
 
 ## Development
-Run client an server concurrently with yarn dev in the root. Client hmr wont work this way
+Run client and server concurrently with yarn dev in the root. 
 
 ### Client
-To run the client with Hot Module Replacement (HMR):
+To run the client seperately
 ```bash
 cd client
 yarn serve
 ```
-Note: HMR only works when running the client from its workspace directory.
 
 ### Server
-To start the server:
+To start the server seperately:
 ```bash
 cd server
 yarn dev

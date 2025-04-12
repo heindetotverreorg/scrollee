@@ -4,7 +4,7 @@ import { setRoutes } from './routes/index';
 import { wsController } from './controllers/index';
 
 const app = express();
-const S_PORT = 3000;
+const S_PORT = 3002;
 const WS_PORT = 3001;
 
 // Middleware
