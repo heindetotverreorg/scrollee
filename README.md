@@ -1,83 +1,54 @@
-# TypeScript Express and Vue.js Project
+# Scrollee
 
-This project is a full-stack application built with TypeScript, Express for the server, and Vue.js for the client. 
+A versatile media feed aggregator that combines web scraping capabilities with a customizable client interface.
 
 ## Project Structure
 
+The project consists of two main workspaces:
+- Client: Frontend application for displaying media feeds
+- Server: Backend service for web scraping and data aggregation
+
+## Installation
+
+1. Clone the repository
+2. Install dependencies using Yarn:
+```bash
+yarn install
 ```
-typescript-express-app
-├── client
-│   ├── src
-│   │   ├── App.vue
-│   │   ├── components
-│   │   │   └── HelloWorld.vue
-│   │   ├── main.ts
-│   │   └── types
-│   │       └── index.ts
-│   ├── package.json
-│   ├── tsconfig.json
-│   └── vite.config.ts
-├── server
-│   ├── src
-│   │   ├── app.ts
-│   │   ├── controllers
-│   │   │   └── index.ts
-│   │   ├── routes
-│   │   │   └── index.ts
-│   │   └── types
-│   │       └── index.ts
-│   ├── package.json
-│   └── tsconfig.json
-├── package.json
-└── README.md
+
+This will install dependencies for both workspaces.
+
+## Development
+Run client an server concurrently with yarn dev in the root. Client hmr wont work this way
+
+### Client
+To run the client with Hot Module Replacement (HMR):
+```bash
+cd client
+yarn serve
 ```
+Note: HMR only works when running the client from its workspace directory.
+
+### Server
+To start the server:
+```bash
+cd server
+yarn dev
+```
+
+## Features
+
+- Web scraping capabilities for various media sources
+- Customizable media feed aggregation
+- Real-time updates through HMR during development
+- Workspace-based project structure
 
 ## Getting Started
 
-### Prerequisites
+1. Set up both client and server
+2. Configure your desired media sources
+3. Create and customize your personal feed
 
-- Node.js
-- npm or yarn
+## License
 
-### Installation
-
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd typescript-express-app
-   ```
-
-2. Install server dependencies:
-   ```bash
-   cd server
-   npm install
-   ```
-
-3. Install client dependencies:
-   ```bash
-   cd client
-   npm install
-   ```
-
-### Running the Application
-
-1. Start the Express server:
-   ```bash
-   cd server
-   npm run start
-   ```
-
-2. Start the Vue.js client:
-   ```bash
-   cd client
-   npm run dev
-   ```
-
-### Project Features
-
-- **Express Server**: Handles API requests and serves the Vue.js application.
-- **Vue.js Client**: A responsive front-end built with Vue.js, featuring a simple component structure.
-
-### License
-
-This project is licensed under the MIT License.
+MIT
