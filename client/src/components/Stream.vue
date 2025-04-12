@@ -18,27 +18,36 @@
     data: {{ data }}
     <slot />
   </template>
-  <script setup lang="ts">
-  import { useWebSocket } from '@vueuse/core'
+<script setup lang="ts">
+import { useWebSocket } from '@vueuse/core'
 
-  const { streamName } = defineProps<{
+const { streamName } = defineProps<{
     streamName: string
-  }>()
+}>()
   
-  const { status, data, send, open, close, } = useWebSocket(`ws://localhost:3000/api/streams/${streamName}`, {
+const { status, data, send, open, close } = useWebSocket(`ws://localhost:3001`, {
     immediate: false
-  })
+})
   
-  function sendMessage(type : string) {
-    send(JSON.stringify({ type, message: `Client receiving a message` }));
-  }
+function sendMessage(connectionConfig : string) {
+    const streamConfig = {
+        cookies: [],
+        streamName,
+        url: 'https://www.reddit.com/login',
+        loginData: {
+            userName: 'vanheindetotverre',
+            password: '10*Matthias'
+        }
+    }
+
+    send(JSON.stringify({ connectionConfig, streamConfig }));
+}
   
-  function onClose() {
+function onClose() {
     close();
-  }
+}
   
-  function onOpen() {
+function onOpen() {
     open();
-  }
-  
-  </script>
+}
+</script>
