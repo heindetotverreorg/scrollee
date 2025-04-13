@@ -4,8 +4,8 @@ import { setRoutes } from './routes/index';
 import { wsController } from './controllers/index';
 
 const app = express();
-const S_PORT = 3002;
-const WS_PORT = 3001;
+const S_PORT = process.env.VITE_S_PORT || '3001';
+const WS_PORT = process.env.VITE_WS_PORT || '3002';
 
 // Middleware
 app.use(express.json());
@@ -20,5 +20,5 @@ app.listen(S_PORT, () => {
 });
 
 // Set up websocket
-const wss = new WebSocketServer({ port: WS_PORT });
+const wss = new WebSocketServer({ port: parseInt(WS_PORT) });
 wsController.handleWebSocket(wss);
