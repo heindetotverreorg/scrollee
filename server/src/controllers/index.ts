@@ -23,7 +23,7 @@ const wsController = {
         // Handle WebSocket connections
         wss.on('connection', (ws: WebSocket) => {
             ws.on('message', async (data: WebSocket.Data) => {
-                const { response } = await puppeteerController.handlePuppeteer(data);
+                const { response } = await puppeteerController.handlePuppeteerRequest(data);
                 ws.send(`Return: ${response}`);
             });
             ws.on('close', () => {
@@ -35,7 +35,7 @@ const wsController = {
 
 const puppeteerController = {
     // Puppeteer controller logic can be added here
-    handlePuppeteer: async (data: WebSocket.Data) => {
+    handlePuppeteerRequest: async (data: WebSocket.Data) => {
         console.log(`Puppeteer received: ${data}`);
 
         const {
@@ -57,53 +57,35 @@ const puppeteerController = {
 
         if (userName){
             const shadowElement = '#login-username'
-            const targetElement = '[name="username"]'
 
-            await page.evaluate((shadowElement, targetElement, userName) => {
-                const shadow = document.querySelector(shadowElement);
-                if (!shadow) {
-                    throw new Error(`Element with selector ${shadowElement} not found`);
-                }
-                const target = shadow?.shadowRoot?.querySelector(targetElement) as HTMLInputElement;
-                if (!target) {
-                    throw new Error(`Element with selector ${targetElement} not found`);
-                }
-                target.value = userName
-                target.dispatchEvent(new Event('focus', { bubbles: true }));
-                target.dispatchEvent(new Event('input', { bubbles: true }));
-                shadow.dispatchEvent(new Event('blur', { bubbles: true }));
-                target.click()
-            }, shadowElement, targetElement, userName);
+            await page.click(`pierce/${shadowElement}`);
+            await page.type(`pierce/${shadowElement}`, userName, { delay: 100 });
+            // await page.keyboard.press('Enter');
+
+            console.log(`Succesfull input with value: ${userName}`);
         }
 
         await delay(2000);
-
-        console.log(`Succesfull input with value: ${userName}`);
 
         if (password){
             const shadowElement = '#login-password'
-            const targetElement = '[name="password"]'
 
-            await page.evaluate((shadowElement, targetElement, password) => {
-                const shadow = document.querySelector(shadowElement);
-                if (!shadow) {
-                    throw new Error(`Element with selector ${shadowElement} not found`);
-                }
-                const target = shadow?.shadowRoot?.querySelector(targetElement) as HTMLInputElement;
-                if (!target) {
-                    throw new Error(`Element with selector ${targetElement} not found`);
-                }
-                target.value = password
-                const inputEvent = new Event('input');
-                target.dispatchEvent(inputEvent);
-                const blurEvent = new Event('blur');
-                target.dispatchEvent(blurEvent);
-            }, shadowElement, targetElement, password);
+            await page.click(`pierce/${shadowElement}`);
+            page.type(`pierce/${shadowElement}`, password, { delay: 100 });
+
+            console.log(`Succesfull input with value: ${password}`);
         }
 
         await delay(2000);
 
-        console.log(`Succesfull input with value: ${password}`);
+        await page.keyboard.press('Enter');
+
+        await page.waitForNavigation({
+            waitUntil: 'networkidle2',
+        });
+        console.log('Page loaded');
+
+        await delay(10000);
 
         await browser.close();
 
