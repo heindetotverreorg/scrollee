@@ -1,0 +1,106 @@
+[{
+    "title": "Reddit home",
+    "name": "reddit-home",
+    "config": {
+        "meta": {
+            "home-feed": true,
+            "subreddits": []
+        },
+        "needsLogin": true,
+        "loginData": {
+            "username": "",
+            "password": ""
+        },
+        "refreshInterval": 10000,
+        "type": "dom",
+        "useSelectors": false,
+        "selectors": null
+    },
+    "url": "https://www.reddit.com/login"
+},
+{
+    "title": "Reddit subreddits",
+    "name": "reddit-subreddits",
+    "config": {
+        "meta": {
+            "home-feed": false,
+            "subreddits": [
+                "r/liverpool",
+                "r/science",
+                "r/worldnews"
+            ]
+        },
+        "needsLogin": false,
+        "loginData": null,
+        "refreshInterval": 10000,
+        "type": "json",
+        "useSelectors": false,
+        "selectors": null
+    },
+    "url": "https://www.reddit.com/${subreddit}/top.json"
+},
+{
+    "title": "Omroep Gelderland Arnhem",
+    "name": "omroep-gelderland",
+    "config": {
+        "meta": {},
+        "needsLogin": false,
+        "loginData": null,
+        "refreshInterval": 10000,
+        "type": "dom",
+        "useSelectors": false,
+        "selectors": null
+    },
+    "url": "https://www.gld.nl/arnhem-en-omstreken"
+},
+{
+    "title": "NOS",
+    "name": "nos",
+    "config": {
+        "meta": {},
+        "needsLogin": false,
+        "loginData": null,
+        "refreshInterval": 10000,
+        "type": "dom",
+        "useSelectors": false,
+        "selectors": null
+    },
+    "url": "https://nos.nl/"
+},
+{
+    "title": "voetbal international",
+    "name": "voetbal-international",
+    "config": {
+        "meta": {},
+        "needsLogin": false,
+        "loginData": null,
+        "refreshInterval": 10000,
+        "type": "dom",
+        "useSelectors": false,
+        "selectors": null
+    },
+    "url": "https://www.vi.nl/nieuws"
+}, 
+{
+    "title": "Hacker news",
+    "name": "hacker-news",
+    "config": {
+        "meta": {},
+        "needsLogin": false,
+        "loginData": null,
+        "refreshInterval": 10000,
+        "type": "json",
+        "useSelectors": true,
+        "selectors": {
+            "title": {
+                "selector": "tbody tr td .titleline",
+                "attribute": "text"
+            },
+            "url": {
+                "selector": "tbody tr td .titleline",
+                "attribute": "href"
+            }
+        }
+    },
+    "url": "https://news.ycombinator.com/"
+}]

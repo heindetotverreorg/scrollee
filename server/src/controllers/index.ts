@@ -1,15 +1,8 @@
 import path from 'path';
 import { Request, Response } from 'express';
 import WebSocket, { WebSocketServer } from 'ws';
-import puppeteer from 'puppeteer-extra';
-import StealthPlugin from 'puppeteer-extra-plugin-stealth';
-
-const delay = (time : number) => {
-    return new Promise(function(resolve) { 
-        setTimeout(resolve, time)
-    });
-  }
-
+import { puppeteerRequestController, puppeteerConnectionController } from './puppeteer'; 
+import { Browser, Page } from 'puppeteer';
 
 const clientController = {
     serveClient: (req: Request, res: Response) => {
@@ -20,79 +13,52 @@ const clientController = {
 const wsController = {
     // WebSocket controller logic can be added here
     handleWebSocket: (wss : WebSocketServer) => {
+        const connections : Record<string, Record<string, Browser | Page>> = {};
         // Handle WebSocket connections
         wss.on('connection', (ws: WebSocket) => {
-            ws.on('message', async (data: WebSocket.Data) => {
-                const { response } = await puppeteerController.handlePuppeteerRequest(data);
-                ws.send(`Return: ${response}`);
-            });
-            ws.on('close', () => {
-                console.log('Client disconnected');
-            });
+            const clientId = Math.random().toString(36).substring(2, 15);
+            try {
+                console.log('Client connected: ' + clientId);
+                ws.on('message', async (data: WebSocket.Data) => {
+                    const { connectionConfig } = JSON.parse(data as string);
+                    if (connectionConfig === 'setupConnection') {
+                        const { browser, page } = await puppeteerConnectionController.handlePuppeteerConnection(data);
+                        if (!connections[clientId]) connections[clientId] = {};
+                        connections[clientId]['browser'] = browser;
+                        connections[clientId]['page'] = page;
+                        ws.send('Connection established');
+                    }
+    
+                    if (connectionConfig === 'receiveData') {
+                        if (!connections[clientId]) {
+                            ws.send('No connection found for client: ' + clientId);
+                            return;
+                        }
+                        const { page } = connections[clientId] as { page: Page };
+                        ws.send('Started receiving data');
+                        const { response } = await puppeteerRequestController.handlePuppeteerRequest(data, page);
+                        ws.send(`Return: ${response}`);
+                    }
+                });
+                ws.on('close', () => {
+                    console.log('client to close: ' + clientId);
+                    console.log('all clients: ' + Object.keys(connections));
+                    const { browser } = connections[clientId];
+                    if (browser) {
+                        browser.close();
+                    }
+                    delete connections[clientId];
+                    console.log('Browser closed');
+                    console.log('Client disconnected');
+                });
+            } catch (error) {
+                console.error(`Error handling WebSocket connection ${clientId}:', ${error}`);
+                ws.send('Error occurred for client: ' + clientId);
+            }
         });
     }
 }
 
-const puppeteerController = {
-    // Puppeteer controller logic can be added here
-    handlePuppeteerRequest: async (data: WebSocket.Data) => {
-        console.log(`Puppeteer received: ${data}`);
 
-        const {
-            streamConfig: { url, loginData: { userName, password } },
-        } = JSON.parse(data as string);
 
-        puppeteer.use(StealthPlugin());
-
-        // Here you can add your Puppeteer logic
-        const browser = await puppeteer.launch({
-            headless: false,
-            args: ['--no-sandbox', '--disable-setuid-sandbox'],
-        });
-
-        const page = await browser.newPage();
-        await page.goto(url, {
-            waitUntil: 'networkidle2',
-        });
-
-        if (userName){
-            const shadowElement = '#login-username'
-
-            await page.click(`pierce/${shadowElement}`);
-            await page.type(`pierce/${shadowElement}`, userName, { delay: 100 });
-            // await page.keyboard.press('Enter');
-
-            console.log(`Succesfull input with value: ${userName}`);
-        }
-
-        await delay(2000);
-
-        if (password){
-            const shadowElement = '#login-password'
-
-            await page.click(`pierce/${shadowElement}`);
-            page.type(`pierce/${shadowElement}`, password, { delay: 100 });
-
-            console.log(`Succesfull input with value: ${password}`);
-        }
-
-        await delay(2000);
-
-        await page.keyboard.press('Enter');
-
-        await page.waitForNavigation({
-            waitUntil: 'networkidle2',
-        });
-        console.log('Page loaded');
-
-        await delay(10000);
-
-        await browser.close();
-
-        return {
-            response: 'success'
-        }
-    }
-}
-
-export { clientController, wsController, puppeteerController }
+export { clientController, wsController, puppeteerRequestController }
