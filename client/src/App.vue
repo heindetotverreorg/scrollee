@@ -19,7 +19,7 @@
 <script setup lang="ts">
     import Stream from '@/components/Stream.vue'
     import { ref, Ref } from 'vue'
-    import { presetStreams } from '@/../../shared/models/streams'
+    import { presetStreams } from '@shared/models/streams'
   
     const chooseStream = ref(false)
     const selectedStream = ref('')
