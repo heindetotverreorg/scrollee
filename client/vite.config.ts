@@ -2,24 +2,6 @@ import { defineConfig, loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
 
-// export default defineConfig({
-//   resolve: {
-//     alias: {
-//       '@': path.resolve(__dirname, './src'),
-//       '@assets': path.resolve(__dirname, './src/assets'),
-//       '@components': path.resolve(__dirname, './src/components'),
-//     },
-//   },
-//   plugins: [vue()],
-//   server: {
-//     port: 3000,
-//   },
-//   build: {
-//     outDir: '../dist/client',
-//   },
-//   root: './client',
-// });
-
 export default ({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "../");
   return defineConfig({
@@ -30,8 +12,7 @@ export default ({ mode }) => {
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
-        '@assets': path.resolve(__dirname, './src/assets'),
-        '@components': path.resolve(__dirname, './src/components'),
+        '@shared': path.resolve(__dirname, '../shared')
       },
     },
     plugins: [vue()],

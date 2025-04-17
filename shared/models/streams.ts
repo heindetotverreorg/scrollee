@@ -1,6 +1,7 @@
 import { Stream, StreamConfig } from "../types";
+import presetStreams from './preset-streams.json'
 
-export function createStream(
+function createStream(
     title: string,
     name: string,
     url: string,
@@ -11,14 +12,13 @@ export function createStream(
             'home-feed': true,
             subreddits: [],
         },
-        needsLogin: true,
+        useLogin: true,
         loginData: {
             username: '',
             password: '',
         },
         refreshInterval: 10000,
         type: 'dom',
-        useSelectors: false,
         selectors: null,
     };
 
@@ -28,4 +28,9 @@ export function createStream(
         config: { ...defaultConfig, ...config },
         url
     };
+}
+
+export {
+    createStream,
+    presetStreams
 }

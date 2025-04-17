@@ -2,6 +2,7 @@ import puppeteer from 'puppeteer-extra';
 import { Page } from 'puppeteer';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import WebSocket from 'ws';
+import { Stream, StreamConfig } from '@shared/types';
 
 const delay = (time : number) => {
     return new Promise(function(resolve) { 
@@ -11,17 +12,23 @@ const delay = (time : number) => {
 
 const puppeteerConnectionController = {
     handlePuppeteerConnection: async (data: WebSocket.Data) => {
-        console.log(`Puppeteer received: ${data}`);
-
-        const {
-            streamConfig: { url, loginData: { userName, password } },
-        } = JSON.parse(data as string);
-
         puppeteer.use(StealthPlugin());
 
-        // Here you can add your Puppeteer logic
+        const {
+            stream,
+        } = JSON.parse(data as string);
+
+        const {
+            url,
+            config,
+        } = stream as Stream;
+
+        const {
+            useLogin,
+        } = config as StreamConfig;
+
         const browser = await puppeteer.launch({
-            headless: false,
+            headless: process.env.NODE_ENV === 'production',
             args: ['--no-sandbox', '--disable-setuid-sandbox'],
         });
 
@@ -36,37 +43,16 @@ const puppeteerConnectionController = {
             waitUntil: 'networkidle2',
         });
 
-        if (userName && password) {
-            if (userName){
-                const shadowElement = '#login-username'
-    
-                await page.click(`pierce/${shadowElement}`);
-                await page.type(`pierce/${shadowElement}`, userName, { delay: 100 });
-                // await page.keyboard.press('Enter');
-    
-                console.log(`Succesfull input with value: ${userName}`);
-            }
-    
-            await delay(2000);
-    
-            if (password){
-                const shadowElement = '#login-password'
-    
-                await page.click(`pierce/${shadowElement}`);
-                page.type(`pierce/${shadowElement}`, password, { delay: 100 });
-    
-                console.log(`Succesfull input with value: ${password}`);
-            }
-    
-            await delay(2000);
-
+        if (useLogin) {
+            await login(config as StreamConfig, page)
             await page.keyboard.press('Enter');
     
             await page.waitForNavigation({
                 waitUntil: 'networkidle2',
             });
-            console.log('Page loaded');
         }
+
+        console.log('Page loaded');
 
         return {
             browser,
@@ -79,8 +65,12 @@ const puppeteerRequestController = {
     // Puppeteer controller logic can be added here
     handlePuppeteerRequest: async (data: WebSocket.Data, page: Page) => {
         const {
-            streamConfig: { streamName }
+            stream,
         } = JSON.parse(data as string);
+
+        const {
+            name,
+        } = stream as Stream;
 
         const articles = await page.evaluate(() => {
             const elements = document.getElementsByTagName('article');
@@ -95,9 +85,28 @@ const puppeteerRequestController = {
         await delay(10000);
 
         return {
-            response: `succes: ${streamName} : ${articles.length} articles found`,
+            response: `succes: ${name} : ${articles.length} articles found`,
         }
     }
 }
 
 export { puppeteerConnectionController, puppeteerRequestController }
+
+const login = async (config : StreamConfig, page : Page) => {
+    const { loginData, selectors } = config;
+
+    for (const [loginStep, loginValue] of Object.entries(loginData)) {
+        const selector = selectors[loginStep].useShadowRoot
+        ? `pierce/${selectors[loginStep].selector}`
+        : selectors[loginStep].selector as string
+
+        console.log(`do actions for ${loginStep} with selector: ${selector}`);
+
+        await page.click(selector);
+        await page.type(selector, loginValue, { delay: 100 });
+
+        console.log(`Succesfull input at ${selector} with value: ${loginValue}`);
+
+        await delay(2000);
+    }
+}

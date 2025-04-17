@@ -1,6 +1,14 @@
 <template>
     <div>
-        <button @click="addStream(`test_${streams.length}`)">Add stream</button>
+        <button @click="chooseStream = true">Add stream</button>
+        <div v-if="chooseStream">
+            <select v-model="selectedStream">
+            <option v-for="stream of presetStreamsList" :key="stream" :value="stream">
+                {{ stream }}
+            </option>
+        </select>
+        <button @click="addStream(selectedStream)">Add stream</button>
+        </div>
     </div>
     <Stream v-for="stream of streams" :stream-name="stream">
         <div>
@@ -11,11 +19,20 @@
 <script setup lang="ts">
     import Stream from '@/components/Stream.vue'
     import { ref, Ref } from 'vue'
+    import { presetStreams } from '@/../../shared/models/streams'
   
+    const chooseStream = ref(false)
+    const selectedStream = ref('')
     const streams : Ref<string[]> = ref([])
+
+    const presetStreamsList = presetStreams.map((stream : any) => {
+        return stream.name
+    }) 
   
     const addStream = (streamName : string) => {
         streams.value.push(streamName)
+        selectedStream.value = ''
+        chooseStream.value = false
     }
   
     const removeStream = (streamName : string) => {

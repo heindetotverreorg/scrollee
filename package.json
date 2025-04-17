@@ -5,12 +5,11 @@
   "scripts": {
     "start": "node dist/server/app.js",
     "build": "tsc -p server/tsconfig.json && vite build --emptyOutDir --config client/vite.config.ts",
-    "dev": "concurrently \"nodemon --watch server server/src/app.ts\" \"vite --config client/vite.config.ts\"",
+    "dev": "concurrently \"tsx --tsconfig server/tsconfig.json --watch server server/src/app.ts\" \"vite --config client/vite.config.ts\"",
     "test": "echo \"No tests specified\" && exit 0"
   },
   "devDependencies": {
-    "concurrently": "^6.2.0",
-    "vite": "^2.6.4"
+    "concurrently": "^6.2.0"
   },
   "workspaces": ["client", "server"]
 }

@@ -1,17 +1,19 @@
 interface StreamConfig {
     meta: {
-        'home-feed': boolean;
-        subreddits: string[];
+        'home-feed'?: boolean;
+        subreddits?: string[];
     };
-    needsLogin: boolean;
+    useLogin: boolean;
     loginData: {
         username: string;
         password: string;
     };
     refreshInterval: number;
     type: 'dom';
-    useSelectors: boolean;
-    selectors: null;
+    selectors: Record<string, {
+        useShadowRoot?: boolean;
+        selector?: string;
+    }>
 }
 
 interface Stream {

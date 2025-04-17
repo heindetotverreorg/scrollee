@@ -7,8 +7,8 @@
     </div>
     <div v-if="status === 'OPEN'">
         <div>
-            <button @click="sendMessage('setupConnection')">setupConnection</button>
-            <button @click="sendMessage('receiveData')">Receive data</button>
+            <button @click="sendMessage(REQUEST_TYPES.CONNECT)">setupConnection</button>
+            <button @click="sendMessage(REQUEST_TYPES.FETCH)">Receive data</button>
         </div>
     </div>
     status: {{ status }}
@@ -17,6 +17,10 @@
   </template>
 <script setup lang="ts">
     import { useWebSocket } from '@vueuse/core'
+    import { REQUEST_TYPES } from '@shared/constants'
+    import { presetStreams } from '@shared/models/streams'
+    import { Stream } from '@shared/types'
+    import { onMounted } from 'vue';
 
     const { streamName } = defineProps<{
         streamName: string
@@ -26,19 +30,19 @@
         immediate: false
     })
     
-    function sendMessage(connectionConfig : string) {
-        const streamConfig = {
-            cookies: [],
-            streamName,
-            url: 'https://www.reddit.com/login',
-            loginData: {
-                userName: 'vanheindetotverre',
-                password: '10*Matthias'
-            }
-        }
+    function sendMessage(requestType : string) {
+        const {
+            name,
+            url,
+            config
+        } = presetStreams.find((stream : Stream) => stream.name === streamName)
 
-        send(JSON.stringify({ connectionConfig, streamConfig }));
+        send(JSON.stringify({ requestType, stream: { name, url, config } }));
     }
+
+    onMounted(() => {
+        open()
+    })
     
     function onClose() {
         close();
