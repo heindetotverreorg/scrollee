@@ -28,8 +28,17 @@ const puppeteerConnectionController = {
         } = config as StreamConfig;
 
         const browser = await puppeteer.launch({
-            headless: process.env.NODE_ENV === 'production',
-            args: ['--no-sandbox', '--disable-setuid-sandbox'],
+            // headless: process.env.NODE_ENV === 'production',
+            headless: true,
+            args: [
+                '--no-sandbox', 
+                '--disable-setuid-sandbox',
+                '--disable-gpu',
+                '--disable-dev-shm-usage'
+            ],
+            env: {
+                DISPLAY: ":10.0"
+            }
         });
 
         const page = await browser.newPage();
@@ -39,17 +48,58 @@ const puppeteerConnectionController = {
             height: 1080,
         });
 
+        await page.setUserAgent(
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
+        );
+
         await page.goto(url, {
             waitUntil: 'networkidle2',
         });
 
         if (useLogin) {
             await login(config as StreamConfig, page)
-            await page.keyboard.press('Enter');
-    
-            await page.waitForNavigation({
-                waitUntil: 'networkidle2',
+
+            // log all requests and responses related to login
+            page.on("request", async (request) => {
+                const url = request.url();
+                const method = request.method();
+                const postData = request.postData();
+
+                if (method === 'POST' && url.includes('reddit.com/svc/shreddit/account/login')) {
+                    console.log(`Request made to: ${url}`);
+                    console.log(`Method: ${method}`);
+                    console.log(`Post data: ${postData}`);
+                }
+            })
+
+            page.on("response", async (response) => {
+                const url = response.url();
+                const status = response.status();
+                const statusText = response.statusText();
+
+                if (status !== 200 && status !== 204 && status !== 206) {
+                    console.log(`Response received from: ${url}`);
+                    console.log(`Status: ${status}`);
+                    console.log(`Status text: ${statusText}`);
+                }
             });
+    
+            try {
+                await page.waitForNavigation({
+                    waitUntil: 'networkidle2',
+                });
+            } catch (error) {
+                page.screenshot({ path: 'error.png' });
+                console.log('Error during navigation:', error);
+                console.log('Screenshot saved as error.png');
+
+                console.log('Login failed, please check your credentials and try again.');
+
+                return {
+                    browser,
+                    page
+                }
+            }
         }
 
         console.log('Page loaded');
@@ -65,12 +115,8 @@ const puppeteerRequestController = {
     // Puppeteer controller logic can be added here
     handlePuppeteerRequest: async (data: WebSocket.Data, page: Page) => {
         const {
-            stream,
+            stream: { name },
         } = JSON.parse(data as string);
-
-        const {
-            name,
-        } = stream as Stream;
 
         const articles = await page.evaluate(() => {
             const elements = document.getElementsByTagName('article');
@@ -109,4 +155,11 @@ const login = async (config : StreamConfig, page : Page) => {
 
         await delay(2000);
     }
+
+    await page.mouse.move(100, 100);
+    await page.mouse.down();
+    await page.mouse.move(200, 200);
+    await page.mouse.up();
+
+    await page.click('button.login')
 }

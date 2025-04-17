@@ -1,0 +1,14 @@
+services:
+  scrollee:
+    platform: linux/arm64
+    image: heindetotverre/scrollee:latest
+    restart: unless-stopped
+    environment:
+      - PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+      - PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
+      - VITE_S_PORT=3001
+      - VITE_WS_PORT=3002
+    ports:
+      - 3001:3001
+      - 3002:3002
+    command: node dist/server/src/app.js

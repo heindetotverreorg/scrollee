@@ -49,3 +49,6 @@ yarn-error.log*
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
+
+# Screenshots
+*.png

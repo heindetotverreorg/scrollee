@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "node dist/server/app.js",
-    "build": "tsc -p server/tsconfig.json && vite build --emptyOutDir --config client/vite.config.ts",
+    "start": "node dist/server/src/app.js",
+    "build": "tsc -p server/tsconfig.json && tsc-alias -p server/tsconfig.json && vite build --emptyOutDir --config client/vite.config.ts",
     "dev": "concurrently \"tsx --tsconfig server/tsconfig.json --watch server server/src/app.ts\" \"vite --config client/vite.config.ts\"",
     "test": "echo \"No tests specified\" && exit 0"
   },

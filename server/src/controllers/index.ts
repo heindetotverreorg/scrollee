@@ -7,13 +7,14 @@ import { REQUEST_TYPES } from '@shared/constants';
 
 const clientController = {
     serveClient: (req: Request, res: Response) => {
-        res.sendFile(path.join(__dirname, '../../../dist/client/index.html'));
+        res.sendFile(path.join(__dirname, '../../../client/index.html'));
     }
 }
 
 const wsController = {
     // WebSocket controller logic can be added here
     handleWebSocket: (wss : WebSocketServer) => {
+        console.log('WebSocket server started with: ', wss.options);
         const connections : Record<string, Record<string, Browser | Page>> = {};
         
         // Handle WebSocket connections
@@ -73,4 +74,4 @@ const wsController = {
 
 
 
-export { clientController, wsController, puppeteerRequestController }
+export { clientController, wsController }

@@ -26,7 +26,7 @@
         streamName: string
     }>()
     
-    const { status, data, send, open, close } = useWebSocket(`ws://localhost:${import.meta.env.VITE_WS_PORT}`, {
+    const { status, data, send, open, close } = useWebSocket(`ws://127.0.0.1:${import.meta.env.VITE_WS_PORT}/test`, {
         immediate: false
     })
     
