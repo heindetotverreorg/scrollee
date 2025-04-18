@@ -14,7 +14,6 @@ const clientController = {
 const wsController = {
     // WebSocket controller logic can be added here
     handleWebSocket: (wss : WebSocketServer) => {
-        console.log('WebSocket server started with: ', wss.options);
         const connections : Record<string, Record<string, Browser | Page>> = {};
         
         // Handle WebSocket connections
@@ -23,7 +22,7 @@ const wsController = {
             console.log('Client connected: ' + clientId);
 
             ws.on('message', async (data: WebSocket.Data) => {
-                const { requestType, stream } = JSON.parse(data as string);
+                const { requestType } = JSON.parse(data as string);
 
                 if (requestType === REQUEST_TYPES.CONNECT) {
                     ws.send('Connecting...');

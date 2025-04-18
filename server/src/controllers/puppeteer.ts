@@ -43,14 +43,17 @@ const puppeteerConnectionController = {
 
         const page = await browser.newPage();
 
-        await page.setViewport({
-            width: 1920,
-            height: 1080,
+        await page.emulate({
+            viewport: {
+                width: 1920,
+                height: 1080,
+                deviceScaleFactor: 1,
+                isMobile: false,
+                hasTouch: false,
+                isLandscape: true,
+            },
+            userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
         });
-
-        await page.setUserAgent(
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
-        );
 
         await page.goto(url, {
             waitUntil: 'networkidle2',
@@ -76,11 +79,13 @@ const puppeteerConnectionController = {
                 const url = response.url();
                 const status = response.status();
                 const statusText = response.statusText();
+                const body = await response.text().catch(() => null);
 
                 if (status !== 200 && status !== 204 && status !== 206) {
                     console.log(`Response received from: ${url}`);
                     console.log(`Status: ${status}`);
                     console.log(`Status text: ${statusText}`);
+                    console.log(`Body: ${body}`);
                 }
             });
     
