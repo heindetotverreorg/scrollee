@@ -8,21 +8,35 @@
         },
         "useLogin": true,
         "loginData": {
-            "username": "matthiaspoortvliet@me.com",
-            "password": "10*Matthias"
+            "values": {
+                "username": "matthiaspoortvliet@me.com",
+                "password": "10*Matthias"
+            },
+            "selectors": {
+                "username": {
+                    "selector": "#login-username",
+                    "useShadowRoot": true
+                },
+                "password": {
+                    "selector": "#login-password",
+                    "useShadowRoot": true
+                }
+            }
+        },
+        "hasCookieBanner": true,
+        "cookieBannerData": {
+            "selectors": {
+                "cookieBanner": {
+                    "selector": "#accept-all-cookies-button button",
+                    "useShadowRoot": true
+                }
+            }
+        },
+        "articleData": {
+
         },
         "refreshInterval": 10000,
-        "type": "dom",
-        "selectors": {
-            "username": {
-                "selector": "#login-username",
-                "useShadowRoot": true
-            },
-            "password": {
-                "selector": "#login-password",
-                "useShadowRoot": true
-            }
-        }
+        "type": "dom"
     },
     "url": "https://www.reddit.com/login"
 },

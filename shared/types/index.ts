@@ -5,15 +5,20 @@ interface StreamConfig {
     };
     useLogin: boolean;
     loginData: {
-        username: string;
-        password: string;
+        values: {
+            [key: string]: string;
+        };
+        selectors: Selectors
     };
+    hasCookieBanner: boolean;
+    cookieBannerData: {
+        selectors: Selectors
+    }
+    articleData: {
+        selectors: Selectors;
+    }
     refreshInterval: number;
     type: 'dom';
-    selectors: Record<string, {
-        useShadowRoot?: boolean;
-        selector?: string;
-    }>
 }
 
 interface Stream {
@@ -23,4 +28,12 @@ interface Stream {
     config?: StreamConfig;
 }
 
-export type { StreamConfig, Stream };
+interface Selectors {
+    [key: string]: {
+        selector: string;
+        useShadowRoot?: boolean;
+        subSelectors?: Selectors
+    }
+}
+
+export type { StreamConfig, Stream, Selectors };
