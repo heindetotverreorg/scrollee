@@ -3,23 +3,28 @@
     "name": "reddit-home",
     "config": {
         "meta": {
-            "home-feed": true,
             "subreddits": []
         },
         "useLogin": true,
         "loginData": {
-            "values": {
-                "username": "matthiaspoortvliet@me.com",
-                "password": "10*Matthias"
-            },
             "selectors": {
                 "username": {
                     "selector": "#login-username",
-                    "useShadowRoot": true
+                    "useShadowRoot": true,
+                    "action": "type",
+                    "value": "matthiaspoortvliet@me.com"
                 },
                 "password": {
                     "selector": "#login-password",
-                    "useShadowRoot": true
+                    "useShadowRoot": true,
+                    "action": "type",
+                    "value": "10*Matthias",
+                    "waitFor": "button.login:not([disabled])"
+                },
+                "loginButton": {
+                    "selector": "button.login",
+                    "useShadowRoot": false,
+                    "action": "click"
                 }
             }
         },
@@ -28,12 +33,19 @@
             "selectors": {
                 "cookieBanner": {
                     "selector": "#accept-all-cookies-button button",
-                    "useShadowRoot": true
+                    "useShadowRoot": true,
+                    "action": "click"
                 }
             }
         },
         "articleData": {
-
+            "selectors": {
+                "articles": {
+                    "selector": "article",
+                    "useShadowRoot": false,
+                    "action": "get"
+                }
+            }
         },
         "refreshInterval": 10000,
         "type": "dom"
@@ -45,20 +57,23 @@
     "name": "reddit-subreddits",
     "config": {
         "meta": {
-            "home-feed": false,
-            "subreddits": [
-                "r/liverpool",
-                "r/science",
-                "r/worldnews"
+            "multiple-paths": [
+                "/r/liverpool/top.json",
+                "/r/science/top.json",
+                "/r/worldnews/top.json"
             ]
         },
         "useLogin": false,
         "loginData": null,
+        "hasCookieBanner": false, 
+        "cookieBannerData": null,
+        "articleData": {
+
+        },
         "refreshInterval": 10000,
-        "type": "json",
-        "selectors": null
+        "type": "json"
     },
-    "url": "https://www.reddit.com/${subreddit}/top.json"
+    "url": "https://www.reddit.com"
 },
 {
     "title": "Omroep Gelderland Arnhem",
@@ -67,9 +82,11 @@
         "meta": {},
         "useLogin": false,
         "loginData": null,
+        "articleData": {
+
+        },
         "refreshInterval": 10000,
-        "type": "dom",
-        "selectors": null
+        "type": "dom"
     },
     "url": "https://www.gld.nl/arnhem-en-omstreken"
 },
@@ -80,6 +97,11 @@
         "meta": {},
         "useLogin": false,
         "loginData": null,
+        "hasCookieBanner": false, 
+        "cookieBannerData": null,
+        "articleData": {
+
+        },
         "refreshInterval": 10000,
         "type": "dom",
         "selectors": null
@@ -93,6 +115,11 @@
         "meta": {},
         "useLogin": false,
         "loginData": null,
+        "hasCookieBanner": false, 
+        "cookieBannerData": null,
+        "articleData": {
+
+        },
         "refreshInterval": 10000,
         "type": "dom",
         "selectors": null
@@ -106,18 +133,22 @@
         "meta": {},
         "useLogin": false,
         "loginData": null,
-        "refreshInterval": 10000,
-        "type": "json",
-        "selectors": {
-            "title": {
-                "selector": "tbody tr td .titleline",
-                "attribute": "text"
-            },
-            "url": {
-                "selector": "tbody tr td .titleline",
-                "attribute": "href"
+        "hasCookieBanner": false, 
+        "cookieBannerData": null,
+        "articleData": {
+            "selectors": {
+                "title": {
+                    "selector": "tbody tr td .titleline",
+                    "attribute": "text"
+                },
+                "url": {
+                    "selector": "tbody tr td .titleline",
+                    "attribute": "href"
+                }
             }
-        }
+        },
+        "refreshInterval": 10000,
+        "type": "json"
     },
     "url": "https://news.ycombinator.com/"
 }]

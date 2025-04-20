@@ -1,3 +1,5 @@
+import { ElementHandle, Browser, Page } from 'puppeteer';
+import WebSocket from 'ws';
 interface StreamConfig {
     meta: {
         'home-feed'?: boolean;
@@ -5,9 +7,6 @@ interface StreamConfig {
     };
     useLogin: boolean;
     loginData: {
-        values: {
-            [key: string]: string;
-        };
         selectors: Selectors
     };
     hasCookieBanner: boolean;
@@ -21,6 +20,13 @@ interface StreamConfig {
     type: 'dom';
 }
 
+interface StreamConnectionsPayload {
+    ws?: WebSocket;
+    data?: WebSocket.Data;
+    connections: Record<string, Record<string, Browser | Page>>
+    clientId: string;
+}
+
 interface Stream {
     title: string;
     name: string;
@@ -32,8 +38,22 @@ interface Selectors {
     [key: string]: {
         selector: string;
         useShadowRoot?: boolean;
-        subSelectors?: Selectors
+        action: 'click' | 'type' | 'get';
+        value?: string,
+        waitFor?: string;
     }
 }
 
-export type { StreamConfig, Stream, Selectors };
+interface Action {
+    elementHandle: ElementHandle;
+    config: {
+        action: string;
+        value?: string;
+        waitFor?: string;
+    },
+    meta: {
+        selector: string;
+    }
+}
+
+export type { StreamConfig, StreamConnectionsPayload, Stream, Selectors, Action };

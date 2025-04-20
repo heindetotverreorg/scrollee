@@ -2,8 +2,9 @@ import path from 'path';
 import { Request, Response } from 'express';
 import WebSocket, { WebSocketServer } from 'ws';
 import { puppeteerRequestController, puppeteerConnectionController } from './puppeteer'; 
-import { Browser, Page } from 'puppeteer';
+import { Browser,Page } from 'puppeteer';
 import { REQUEST_TYPES } from '@shared/constants';
+import { StreamConnectionsPayload } from '@shared/types';
 
 const clientController = {
     serveClient: (req: Request, res: Response) => {
@@ -14,7 +15,7 @@ const clientController = {
 const wsController = {
     // WebSocket controller logic can be added here
     handleWebSocket: (wss : WebSocketServer) => {
-        const connections : Record<string, Record<string, Browser | Page>> = {};
+        const connections : Record<string, Record<string, Browser | Page>>  = {};
         
         // Handle WebSocket connections
         wss.on('connection', (ws: WebSocket) => {
@@ -25,41 +26,16 @@ const wsController = {
                 const { requestType } = JSON.parse(data as string);
 
                 if (requestType === REQUEST_TYPES.CONNECT) {
-                    ws.send('Connecting...');
-                    const { browser, page } = await puppeteerConnectionController.handlePuppeteerConnection(data);
-                    if (!connections[clientId]) connections[clientId] = {};
-                    connections[clientId]['browser'] = browser;
-                    connections[clientId]['page'] = page;
-                    ws.send('Connection established');
+                    connectToStream({ ws, data, connections, clientId });
                 }
 
                 if (requestType === REQUEST_TYPES.FETCH) {
-                    if (!connections[clientId]) {
-                        ws.send('No connection found for client: ' + clientId);
-                        return;
-                    }
-                    const { page } = connections[clientId] as { page: Page };
-                    ws.send('Started receiving data');
-                    const { response } = await puppeteerRequestController.handlePuppeteerRequest(data, page);
-                    ws.send(`Return: ${response}`);
+                    fetchFromStream({ ws, data, connections, clientId });
                 }
             });
 
             ws.on('close', () => {
-                console.log('client to close: ' + clientId);
-                console.log('all clients: ' + Object.keys(connections));
-                if (!connections[clientId]) {
-                    console.log('No connection found for client: ' + clientId);
-                    console.log('Client connection probably never established');
-                    return;
-                }
-                const { browser } = connections[clientId];
-                if (browser) {
-                    browser.close();
-                }
-                delete connections[clientId];
-                console.log('Browser closed');
-                console.log('Client emoved');
+                closeStream({ connections, clientId });
             });
 
             ws.on('error', (error) => {
@@ -71,6 +47,41 @@ const wsController = {
     }
 }
 
-
-
 export { clientController, wsController }
+
+const connectToStream = async ({ ws, data, connections, clientId } : StreamConnectionsPayload) => {
+    ws?.send('Connecting...');
+    const { browser, page } = await puppeteerConnectionController.handlePuppeteerConnection(data as string);
+    if (!connections[clientId]) connections[clientId] = {};
+    connections[clientId]['browser'] = browser;
+    connections[clientId]['page'] = page;
+    ws?.send('Connection established');
+}
+
+const fetchFromStream = async ({ ws, data, connections, clientId } : StreamConnectionsPayload) => {
+    if (!connections[clientId]) {
+        ws?.send('No connection found for client: ' + clientId);
+        return;
+    }
+    const { page } = connections[clientId] as { page: Page };
+    ws?.send('Started receiving data');
+    const { response } = await puppeteerRequestController.handlePuppeteerRequest(data as string, page);
+    ws?.send(`Return: ${response}`);
+}
+
+const closeStream = async ({ connections, clientId } : StreamConnectionsPayload) => {
+    console.log('client to close: ' + clientId);
+    console.log('all clients: ' + Object.keys(connections));
+    if (!connections[clientId]) {
+        console.log('No connection found for client: ' + clientId);
+        console.log('Client connection probably never established');
+        return;
+    }
+    const { browser } = connections[clientId];
+    if (browser) {
+        browser.close();
+    }
+    delete connections[clientId];
+    console.log('Browser closed');
+    console.log('Client emoved');
+}
