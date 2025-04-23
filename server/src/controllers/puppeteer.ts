@@ -170,7 +170,7 @@ const getActions = async (page : Page, selectors : Selectors) : Promise<Action[]
                     waitFor: selector.waitFor
                 },
                 meta: {
-                    selector: derivedSelector
+                    selector: elementSelector
                 }
             });
         }
@@ -189,7 +189,7 @@ const doActions = async (actions : Action[], page : Page) => {
             await elementHandle.click();
         } else if (action === 'get') {
             return await elementHandle.evaluate((_, meta) => {
-                const elements = document.getElementsByTagName(meta.selector);
+                const elements = document.querySelectorAll(meta.selector);
                 return Array.from(elements).map(article => ({
                     text: article.textContent,
                     html: article.innerHTML

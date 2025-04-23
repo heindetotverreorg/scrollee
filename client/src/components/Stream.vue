@@ -1,19 +1,21 @@
 <template>
-    <div v-if="status === 'CLOSED'">
-      <button @click="onOpen">Open {{ streamName }}</button>
-    </div>
-    <div v-if="status === 'OPEN'">
-      <button @click="onClose">Close {{ streamName }}</button>
-    </div>
-    <div v-if="status === 'OPEN'">
-        <div>
-            <button @click="sendMessage(REQUEST_TYPES.CONNECT)">setupConnection</button>
-            <button @click="sendMessage(REQUEST_TYPES.FETCH)">Receive data</button>
+    <section class="stream">
+        <div v-if="status === 'CLOSED'">
+        <button @click="onOpen">Open {{ streamName }}</button>
         </div>
-    </div>
-    status: {{ status }}
-    data: {{ data }}
-    <slot />
+        <div v-if="status === 'OPEN'">
+        <button @click="onClose">Close {{ streamName }}</button>
+        </div>
+        <div v-if="status === 'OPEN'">
+            <div>
+                <button @click="sendMessage(REQUEST_TYPES.CONNECT)">setupConnection</button>
+                <button @click="sendMessage(REQUEST_TYPES.FETCH)">Receive data</button>
+            </div>
+        </div>
+        status: {{ status }}
+        data: {{ data }}
+        <slot />
+    </section>
   </template>
 <script setup lang="ts">
     import { useWebSocket } from '@vueuse/core'
@@ -52,3 +54,8 @@
         open();
     }
 </script>
+<style scoped lang="scss">
+    .stream {
+        width: 200px;
+    }
+</style>

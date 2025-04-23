@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="stream-setup">
         <button @click="chooseStream = true">Add stream</button>
         <div v-if="chooseStream">
             <select v-model="selectedStream">
@@ -10,11 +10,13 @@
         <button @click="addStream(selectedStream)">Add stream</button>
         </div>
     </div>
-    <Stream v-for="stream of streams" :stream-name="stream">
-        <div>
-            <button @click="removeStream(stream)">Remove stream</button>
-        </div>
-    </Stream>
+    <div class="streams">
+        <Stream v-for="stream of streams" :stream-name="stream">
+            <div>
+                <button @click="removeStream(stream)">Remove stream</button>
+            </div>
+        </Stream>
+    </div>
 </template>
 <script setup lang="ts">
     import Stream from '@/components/Stream.vue'
@@ -39,3 +41,15 @@
         streams.value = streams.value.filter(stream => stream !== streamName)
     }
   </script>
+  <style scoped lang="scss">
+    .stream-setup {
+        height: 50px;
+        margin-bottom :20px;
+    }
+
+    .streams {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+  </style>

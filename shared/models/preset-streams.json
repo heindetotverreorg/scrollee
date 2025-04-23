@@ -82,8 +82,24 @@
         "meta": {},
         "useLogin": false,
         "loginData": null,
+        "hasCookieBanner": true,
+        "cookieBannerData": {
+            "selectors": {
+                "cookieBanner": {
+                    "selector": "#consent-plugin button.full",
+                    "useShadowRoot": false,
+                    "action": "click"
+                }
+            }
+        },
         "articleData": {
-
+            "selectors": {
+                "articles": {
+                    "selector": ".groei-list-item",
+                    "useShadowRoot": false,
+                    "action": "get"
+                }
+            }
         },
         "refreshInterval": 10000,
         "type": "dom"
@@ -100,13 +116,19 @@
         "hasCookieBanner": false, 
         "cookieBannerData": null,
         "articleData": {
-
+            "selectors": {
+                "articles": {
+                    "selector": "li",
+                    "useShadowRoot": false,
+                    "action": "get"
+                }
+            }
         },
         "refreshInterval": 10000,
         "type": "dom",
         "selectors": null
     },
-    "url": "https://nos.nl/"
+    "url": "https://nos.nl/nieuws/laatste"
 },
 {
     "title": "voetbal international",
@@ -115,10 +137,24 @@
         "meta": {},
         "useLogin": false,
         "loginData": null,
-        "hasCookieBanner": false, 
-        "cookieBannerData": null,
+        "hasCookieBanner": true, 
+        "cookieBannerData": {
+            "selectors": {
+                "articles": {
+                    "selector": ".cmpboxbtnyes",
+                    "useShadowRoot": true,
+                    "action": "click"
+                }
+            }
+        },
         "articleData": {
-
+            "selectors": {
+                "articles": {
+                    "selector": ".c-articles-list__item",
+                    "useShadowRoot": false,
+                    "action": "get"
+                }
+            }
         },
         "refreshInterval": 10000,
         "type": "dom",

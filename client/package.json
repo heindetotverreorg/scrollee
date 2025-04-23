@@ -12,6 +12,7 @@
     "puppeteer": "^24.6.1",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "sass": "^1.87.0",
     "vue": "^3.0.0"
   },
   "devDependencies": {
