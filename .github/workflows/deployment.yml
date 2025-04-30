@@ -25,6 +25,7 @@ jobs:
           rm -rf ${{ env.IMAGE_NAME }}
           mkdir -p ~/${{ env.IMAGE_NAME }}
           cd ~/${{ env.IMAGE_NAME }}
+          print "${{ env.repo }}"
           git init
           git remote add origin ${{ env.REPO }}
           git fetch origin
