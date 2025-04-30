@@ -22,4 +22,6 @@ RUN yarn build
 
 EXPOSE 3001
 
+EXPOSE 3002
+
 CMD [ "node", "dist/server/index.mjs" ]
