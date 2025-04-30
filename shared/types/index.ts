@@ -56,4 +56,11 @@ interface Action {
     }
 }
 
-export type { StreamConfig, StreamConnectionsPayload, Stream, Selectors, Action };
+interface StreamResponse {
+    streamData: string;
+    streamStatus: string;
+    error: string;
+    clientId: string
+}
+
+export type { StreamConfig, StreamConnectionsPayload, Stream, Selectors, Action, StreamResponse };

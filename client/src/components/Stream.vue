@@ -21,7 +21,7 @@
     import { useWebSocket } from '@vueuse/core'
     import { REQUEST_TYPES } from '@shared/constants'
     import { presetStreams } from '@shared/models/streams'
-    import { Stream } from '@shared/types'
+    import { Stream, StreamResponse } from '@shared/types'
     import { onMounted } from 'vue';
 
     const { streamName } = defineProps<{
@@ -31,6 +31,13 @@
     const { status, data, send, open, close } = useWebSocket(`ws://127.0.0.1:${import.meta.env.VITE_WS_PORT}/test`, {
         immediate: false
     })
+
+    const {
+        streamData, 
+        streamStatus,
+        error,
+        clientId
+    } = data.value as StreamResponse
     
     function sendMessage(requestType : string) {
         const {

@@ -4,7 +4,7 @@ import WebSocket, { WebSocketServer } from 'ws';
 import { puppeteerRequestController, puppeteerConnectionController } from './puppeteer'; 
 import { Browser,Page } from 'puppeteer';
 import { REQUEST_TYPES } from '@shared/constants';
-import { StreamConnectionsPayload } from '@shared/types';
+import { StreamConnectionsPayload, StreamResponse } from '@shared/types';
 
 const clientController = {
     serveClient: (req: Request, res: Response) => {
