@@ -21,5 +21,5 @@ app.listen(S_PORT, () => {
 
 // Set up websocket
 const wss = new WebSocketServer({ port: parseInt(WS_PORT) });
-console.log(`WebSocket server is running on ws://localhost:${WS_PORT}`);
+console.log(`WebSocket server is running on ${wss.options.host}:${wss.options.port}`);
 wsController.handleWebSocket(wss);

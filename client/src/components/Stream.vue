@@ -28,16 +28,16 @@
         streamName: string
     }>()
     
-    const { status, data, send, open, close } = useWebSocket(`ws://127.0.0.1:${import.meta.env.VITE_WS_PORT || 3002}/test`, {
+    const { status, data, send, open, close } = useWebSocket(`ws://127.0.0.1:${import.meta.env.VITE_WS_PORT || 3002}`, {
         immediate: false
     })
 
-    const {
-        streamData, 
-        streamStatus,
-        error,
-        clientId
-    } = data.value as StreamResponse
+    // const {
+    //     streamData, 
+    //     streamStatus,
+    //     error,
+    //     clientId
+    // } = data.value as StreamResponse
     
     function sendMessage(requestType : string) {
         const {
