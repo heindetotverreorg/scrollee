@@ -22,7 +22,7 @@ app.listen(S_PORT, () => {
 const server = http.createServer()
 
 // Set up websocket
-const wss = new WebSocketServer({ server });
+const wss = new WebSocketServer({ server, path: '/ws' });
 wsController.handleWebSocket(wss);
 server.listen(WS_PORT, () => {
     console.log(`WebSocket server is running on ws://localhost:${WS_PORT}`);
