@@ -32,8 +32,13 @@
     const wsPort = import.meta.env.VITE_WS_PORT || '3002'
     const wsProtocol = import.meta.env.VITE_WS_PROTOCOL || 'ws'
 
+    console.log(`Attempting to connect to: ${wsProtocol}://${wsHost}:${wsPort}/ws`)
+
     const { status, data, send, open, close } = useWebSocket(`${wsProtocol}://${wsHost}:${wsPort}/ws`, {
-        immediate: false
+        immediate: false,
+        onError: (e) => {
+            console.error('WebSocket error:', e)
+        }
     })
 
     // const {

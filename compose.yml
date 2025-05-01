@@ -8,8 +8,9 @@ services:
       - PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
       - VITE_S_PORT=3001
       - VITE_WS_PORT=3002
+      - VITE_WS_HOST=172.20.0.2
       - NODE_ENV=production
     ports:
-      - "0.0.0.0:3001:3001"
-      - "0.0.0.0:3002:3002"
+      - "3001:3001"
+      - "3002:3002"
     command: node dist/server/src/app.js
