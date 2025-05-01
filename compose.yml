@@ -13,4 +13,9 @@ services:
     ports:
       - "3001:3001"
       - "3002:3002"
+    networks:
+      - webnet
     command: node dist/server/src/app.js
+networks:
+  webnet:
+    driver: bridge
