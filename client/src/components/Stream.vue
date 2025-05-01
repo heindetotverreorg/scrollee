@@ -30,8 +30,9 @@
     
     const wsHost = import.meta.env.VITE_WS_HOST || 'scrollee.heindetotverre.com'
     const wsPort = import.meta.env.VITE_WS_PORT || '3002'
-    
-    const { status, data, send, open, close } = useWebSocket(`ws://${wsHost}:${wsPort}/ws`, {
+    const wsProtocol = import.meta.env.VITE_WS_PROTOCOL || 'wss'
+
+    const { status, data, send, open, close } = useWebSocket(`${wsProtocol}://${wsHost}:${wsPort}/ws`, {
         immediate: false
     })
 
