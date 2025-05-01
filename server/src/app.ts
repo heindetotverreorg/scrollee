@@ -17,7 +17,7 @@ setRoutes(app, express);
 
 // Setup server
 app.listen(S_PORT, () => {
-    console.log(`Server is running on http://localhost:${S_PORT}`);
+    console.log(`Server is running on port ${S_PORT}`);
 });
 const server = http.createServer()
 
@@ -25,5 +25,5 @@ const server = http.createServer()
 const wss = new WebSocketServer({ server, path: '/ws' });
 wsController.handleWebSocket(wss);
 server.listen(WS_PORT, () => {
-    console.log(`WebSocket server is running on ws://localhost:${WS_PORT}`);
+    console.log(`WebSocket server is running on port ${WS_PORT}`);
 });
