@@ -28,7 +28,7 @@
         streamName: string
     }>()
     
-    const { status, data, send, open, close } = useWebSocket(`wss://scrollee.heindetotverre.com:${import.meta.env.VITE_WS_PORT || 3002}/ws`, {
+    const { status, data, send, open, close } = useWebSocket(`ws://scrollee.heindetotverre.com/ws`, {
         immediate: false
     })
 
