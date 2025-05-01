@@ -28,7 +28,7 @@
         streamName: string
     }>()
     
-    const wsHost = import.meta.env.VITE_WS_HOST || '0.0.0.0'
+    const wsHost = import.meta.env.VITE_WS_HOST || '172.20.0.2'
     const wsPort = import.meta.env.VITE_WS_PORT || '3002'
     const wsProtocol = import.meta.env.VITE_WS_PROTOCOL || 'ws'
 
