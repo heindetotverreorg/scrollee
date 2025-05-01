@@ -18,17 +18,20 @@
     </section>
   </template>
 <script setup lang="ts">
+    import { ref } from 'vue'
     import { useWebSocket } from '@vueuse/core'
     import { REQUEST_TYPES } from '@shared/constants'
     import { presetStreams } from '@shared/models/streams'
     import { Stream, StreamResponse } from '@shared/types'
     import { onMounted } from 'vue';
 
-    const { streamName } = defineProps<{
-        streamName: string
+    const { streamName, wsHost } = defineProps<{
+        streamName: string,
+        wsHost: string
     }>()
     
-    const wsHost = import.meta.env.VITE_WS_HOST || '172.20.0.2'
+    // const wsHost = import.meta.env.VITE_WS_HOST || '172.20.0.2'
+
     const wsPort = import.meta.env.VITE_WS_PORT || '3002'
     const wsProtocol = import.meta.env.VITE_WS_PROTOCOL || 'ws'
 

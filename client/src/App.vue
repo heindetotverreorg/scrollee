@@ -9,9 +9,10 @@
         </select>
         <button @click="addStream(selectedStream)">Add stream</button>
         </div>
+        <input type="text" v-model="wsHost" />
     </div>
     <div class="streams">
-        <Stream v-for="stream of streams" :stream-name="stream">
+        <Stream v-for="stream of streams" :stream-name="stream" :ws-host="wsHost">
             <div>
                 <button @click="removeStream(stream)">Remove stream</button>
             </div>
@@ -26,6 +27,7 @@
     const chooseStream = ref(false)
     const selectedStream = ref('')
     const streams : Ref<string[]> = ref([])
+        const wsHost = ref('localhost')
 
     const presetStreamsList = presetStreams.map((stream : any) => {
         return stream.name
