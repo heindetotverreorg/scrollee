@@ -27,7 +27,7 @@
     const chooseStream = ref(false)
     const selectedStream = ref('')
     const streams : Ref<string[]> = ref([])
-        const wsHost = ref('localhost')
+    const wsHost = ref('localhost')
 
     const presetStreamsList = presetStreams.map((stream : any) => {
         return stream.name

@@ -7,7 +7,7 @@ import { wsController } from './controllers/index';
 const app = express();
 const S_PORT = process.env.VITE_S_PORT || 3001;
 const WS_PORT = process.env.VITE_WS_PORT || 3002;
-const host = process.env.VITE_WS_HOST || '127.0.0.1';
+const host = process.env.VITE_WS_HOST || '';
 
 // Middleware
 app.use(express.json());
@@ -27,9 +27,8 @@ const port = process.env.VITE_WS_PORT || 3002;
 const server = http.createServer(app);
 
 const wss = new WebSocket.Server({
-    server
-}, () => {
-    console.log(`WebSocket server is running on ${WS_PORT}`);
+    server,
+    path: '/ws',
 });
 
 server.listen(port as number, host as string, () => {
