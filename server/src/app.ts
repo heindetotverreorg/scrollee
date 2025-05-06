@@ -31,6 +31,11 @@ const wss = new WebSocket.Server({
     path: '/ws',
 });
 
+wss.on('error', (error) => {
+    console.error('WebSocket server error:', error);
+    wss.close();
+});
+
 server.listen(port as number, host as string, () => {
     const address = server.address();
     console.log(`WebSocket server is listening on ${JSON.stringify(address)}`);
