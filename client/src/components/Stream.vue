@@ -1,5 +1,6 @@
 <template>
     <section class="stream">
+        status: {{ streamStatus || status.toLowerCase() }}
         <div v-if="status === 'CLOSED'">
         <button @click="onOpen">Open {{ streamName }}</button>
         </div>
@@ -12,7 +13,6 @@
                 <slot />
             </div>
         </div>
-        status: {{ streamStatus || status.toLowerCase() }}
         <div v-if="streamStatus && streamData" v-html="streamData" />
     </section>
   </template>
@@ -21,7 +21,7 @@
     import { useWebSocket } from '@vueuse/core'
     import { REQUEST_TYPES } from '@shared/constants'
     import { presetStreams } from '@shared/models/streams'
-    import { Stream, StreamResponse } from '@shared/types'
+    import { Stream, StreamResponse, StreamStatus } from '@shared/types'
 
     const { streamName } = defineProps<{
         streamName: string
@@ -36,11 +36,12 @@
     const fullPath = `ws://${wsPath}/ws`
 
     const { status, data, send, open, close } = useWebSocket(fullPath, {
-        immediate: false,
-        onError: (wss) => {
-            wss.onerror = (e) => {
-                console.error('WebSocket client error:', e)
-            }
+        immediate: false
+    })
+
+    watch(streamStatus, (newValue) => {
+        if (newValue === StreamStatus.CONNECTED) {
+            sendMessage(REQUEST_TYPES.FETCH)
         }
     })
 
@@ -58,8 +59,6 @@
                 error: incomingError,
                 clientId: incomingClientId
             } = JSON.parse(newValue) || {} as StreamResponse
-
-            console.log('WebSocket data:', streamData)
 
             if (incomingStreamData) {
                 streamData.value = incomingStreamData

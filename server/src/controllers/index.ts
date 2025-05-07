@@ -13,11 +13,9 @@ const clientController = {
 }
 
 const wsController = {
-    // WebSocket controller logic can be added here
     handleWebSocket: (wss : WebSocketServer) => {
         const connections : Record<string, Record<string, Browser | Page>>  = {};
         
-        // Handle WebSocket connections
         wss.on('connection', (ws: WebSocket) => {
             const clientId = Math.random().toString(36).substring(2, 15);
             console.log('Client connected: ' + clientId);
@@ -78,13 +76,15 @@ const closeStream = async ({ connections, clientId } : StreamConnectionsPayload)
     console.log('all clients: ' + Object.keys(connections));
     if (!connections[clientId]) {
         console.log('No connection found for client: ' + clientId);
-        console.log('Client connection probably never established');
+        console.log('Client connection never established');
         return;
     }
+
     const { browser } = connections[clientId];
     if (browser) {
         browser.close();
     }
+
     delete connections[clientId];
     console.log('Browser closed');
     console.log('Client emoved');
