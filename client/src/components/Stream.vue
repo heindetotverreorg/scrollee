@@ -8,47 +8,73 @@
         </div>
         <div v-if="status === 'OPEN'">
             <div>
-                <button @click="sendMessage(REQUEST_TYPES.CONNECT)">setupConnection</button>
                 <button @click="sendMessage(REQUEST_TYPES.FETCH)">Receive data</button>
+                <slot />
             </div>
         </div>
-        status: {{ status }}
-        data: {{ data }}
-        <slot />
+        status: {{ streamStatus || status.toLowerCase() }}
+        <div v-if="streamStatus && streamData" v-html="streamData" />
     </section>
   </template>
 <script setup lang="ts">
-    import { ref } from 'vue'
+    import { ref, watch, onMounted } from 'vue'
     import { useWebSocket } from '@vueuse/core'
     import { REQUEST_TYPES } from '@shared/constants'
     import { presetStreams } from '@shared/models/streams'
     import { Stream, StreamResponse } from '@shared/types'
-    import { onMounted } from 'vue';
 
     const { streamName } = defineProps<{
         streamName: string
     }>()
 
+    const streamData = ref('')
+    const streamStatus = ref('')
+    const error = ref('')
+    const clientId = ref('')
+
     const wsPath = import.meta.env.VITE_WS_PATH || 'scrollee.heindetotverre.com'
     const fullPath = `ws://${wsPath}/ws`
-
-    console.log(`Attempting to connect to: ${fullPath}`)
 
     const { status, data, send, open, close } = useWebSocket(fullPath, {
         immediate: false,
         onError: (wss) => {
             wss.onerror = (e) => {
-                console.error('WebSocket error:', e)
+                console.error('WebSocket client error:', e)
             }
         }
     })
 
-    // const {
-    //     streamData, 
-    //     streamStatus,
-    //     error,
-    //     clientId
-    // } = data.value as StreamResponse
+    watch(status, (newValue) => {
+        if (newValue === 'OPEN') {
+            sendMessage(REQUEST_TYPES.CONNECT)
+        }
+    })
+
+    watch(data, (newValue) => {
+        if (newValue) {
+            const {
+                streamData: incomingStreamData, 
+                streamStatus : incomingStreamStatus,
+                error: incomingError,
+                clientId: incomingClientId
+            } = JSON.parse(newValue) || {} as StreamResponse
+
+            console.log('WebSocket data:', streamData)
+
+            if (incomingStreamData) {
+                streamData.value = incomingStreamData
+            }
+            if (incomingStreamStatus) {
+                streamStatus.value = incomingStreamStatus
+            }
+            if (incomingError) {
+                error.value = incomingError
+            }
+            if (incomingClientId) {
+                clientId.value = incomingClientId
+            }
+        }
+    })
     
     function sendMessage(requestType : string) {
         const {

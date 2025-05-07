@@ -4,7 +4,7 @@ import WebSocket, { WebSocketServer } from 'ws';
 import { puppeteerRequestController, puppeteerConnectionController } from './puppeteer'; 
 import { Browser,Page } from 'puppeteer';
 import { REQUEST_TYPES } from '@shared/constants';
-import { StreamConnectionsPayload, StreamResponse } from '@shared/types';
+import { StreamConnectionsPayload, StreamResponse, StreamStatus } from '@shared/types';
 
 const clientController = {
     serveClient: (req: Request, res: Response) => {
@@ -40,7 +40,8 @@ const wsController = {
 
             ws.on('error', (error) => {
                 console.error('WebSocket error:', error);
-                ws.send('Error: ' + error);
+                ws.send(makeMessage(StreamStatus.ERROR, clientId, undefined, error.message));
+                
                 ws.close();
             });
         });
@@ -50,23 +51,26 @@ const wsController = {
 export { clientController, wsController }
 
 const connectToStream = async ({ ws, data, connections, clientId } : StreamConnectionsPayload) => {
-    ws?.send('Connecting...');
+    ws?.send(makeMessage(StreamStatus.CONNECTING, clientId));
+
     const { browser, page } = await puppeteerConnectionController.handlePuppeteerConnection(data as string);
     if (!connections[clientId]) connections[clientId] = {};
     connections[clientId]['browser'] = browser;
     connections[clientId]['page'] = page;
-    ws?.send('Connection established');
+
+    ws?.send(makeMessage(StreamStatus.CONNECTED, clientId));
 }
 
 const fetchFromStream = async ({ ws, data, connections, clientId } : StreamConnectionsPayload) => {
     if (!connections[clientId]) {
-        ws?.send('No connection found for client: ' + clientId);
+        ws?.send(makeMessage(StreamStatus.ERROR, clientId, undefined, 'No connection found'));
+
         return;
     }
     const { page } = connections[clientId] as { page: Page };
-    ws?.send('Started receiving data');
-    const { response } = await puppeteerRequestController.handlePuppeteerRequest(data as string, page);
-    ws?.send(`Return: ${response}`);
+    ws?.send(makeMessage(StreamStatus.PENDING));
+    const response = await puppeteerRequestController.handlePuppeteerRequest(data as string, page);
+    ws?.send(JSON.stringify(response));
 }
 
 const closeStream = async ({ connections, clientId } : StreamConnectionsPayload) => {
@@ -84,4 +88,13 @@ const closeStream = async ({ connections, clientId } : StreamConnectionsPayload)
     delete connections[clientId];
     console.log('Browser closed');
     console.log('Client emoved');
+}
+
+const makeMessage = (state: StreamStatus, clientId?: string,  data?: string, error?: string) => {
+    return JSON.stringify({
+        streamData: data,
+        streamStatus: state,
+        error,
+        clientId
+    } as StreamResponse)
 }

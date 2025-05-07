@@ -2,7 +2,7 @@ import puppeteer from 'puppeteer-extra';
 import { Page, Browser, KnownDevices, ElementHandle } from 'puppeteer';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import WebSocket from 'ws';
-import { Stream, StreamConfig, Selectors, Action } from '@shared/types';
+import { Stream, StreamConfig, Selectors, Action, StreamResponse, StreamStatus } from '@shared/types';
 
 const puppeteerConnectionController = {
     handlePuppeteerConnection: async (data: WebSocket.Data) => {
@@ -79,8 +79,10 @@ const puppeteerRequestController = {
         const articles = await doActions(actions, page) as any
 
         return {
-            response: `succes ${name} : ${articles?.length} articles found`,
-        }
+            streamData: JSON.stringify(articles),
+            streamStatus: StreamStatus.SUCCESS,
+            error: ''
+        } as StreamResponse
     },
     handleAuthenticate: async (config : StreamConfig, page : Page) => {
         handleAuthenticationRequestLogs(page);
@@ -148,6 +150,12 @@ const handleError = (error: any, page: Page) => {
     console.log('Screenshot saved as error.png');
 
     console.log('Login failed, please check your credentials and try again.');
+
+    return {
+        streamData: '',
+        streamStatus: StreamStatus.ERROR,
+        error: JSON.stringify(error)
+    } as StreamResponse
 }
 
 const getActions = async (page : Page, selectors : Selectors) : Promise<Action[]> => {

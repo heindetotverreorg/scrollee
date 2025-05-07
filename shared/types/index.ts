@@ -57,10 +57,26 @@ interface Action {
 }
 
 interface StreamResponse {
-    streamData: string;
-    streamStatus: string;
-    error: string;
-    clientId: string
+    streamData?: string;
+    streamStatus: StreamStatus;
+    error?: string;
+    clientId?: string
+}
+
+enum StreamStatus {
+    SUCCESS = 'success',
+    ERROR = 'error',
+    PENDING = 'pending',
+    LOADING = 'loading',
+    CONNECTING = 'connecting',
+    DISCONNECTED = 'disconnected',
+    CONNECTED = 'connected',
+    RECONNECTING = 'reconnecting',
+    CLOSED = 'closed',
+    OPEN = 'open',
+    READY = 'ready',
 }
 
 export type { StreamConfig, StreamConnectionsPayload, Stream, Selectors, Action, StreamResponse };
+
+export { StreamStatus }
