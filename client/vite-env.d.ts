@@ -1,5 +1,5 @@
 interface ImportMetaEnv {
-    readonly VITE_WS_PORT: number
+    readonly VITE_WS_PATH: number
    
   }
   

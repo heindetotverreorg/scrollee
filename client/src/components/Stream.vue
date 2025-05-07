@@ -25,20 +25,18 @@
     import { Stream, StreamResponse } from '@shared/types'
     import { onMounted } from 'vue';
 
-    const { streamName, wsHost } = defineProps<{
-        streamName: string,
-        wsHost: string
+    const { streamName } = defineProps<{
+        streamName: string
     }>()
 
-    const wsPort = import.meta.env.VITE_WS_PORT || 3002
-    const fullPath = `ws://${wsHost}:${wsPort}/ws`
+    const wsPath = import.meta.env.VITE_WS_PATH || 'scrollee.heindetotverre.com'
+    const fullPath = `ws://${wsPath}/ws`
 
     console.log(`Attempting to connect to: ${fullPath}`)
 
     const { status, data, send, open, close } = useWebSocket(fullPath, {
         immediate: false,
         onError: (wss) => {
-            // console.error('WebSocket error:', wss)
             wss.onerror = (e) => {
                 console.error('WebSocket error:', e)
             }
