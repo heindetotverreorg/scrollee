@@ -31,10 +31,11 @@
     }>()
 
     const wsPort = import.meta.env.VITE_WS_PORT || 3002
+    const fullPath = `ws://${wsHost}:${wsPort}/ws`
 
-    console.log(`Attempting to connect to: ws://${wsHost}:${wsPort}`)
+    console.log(`Attempting to connect to: ${fullPath}`)
 
-    const { status, data, send, open, close } = useWebSocket(`ws://${wsHost}:${wsPort}`, {
+    const { status, data, send, open, close } = useWebSocket(fullPath, {
         immediate: false,
         onError: (wss) => {
             // console.error('WebSocket error:', wss)

@@ -26,7 +26,9 @@ app.listen(S_PORT, () => {
 const server = http.createServer(app);
 
 const wss = new WebSocket.Server({
-    server
+    server,
+    path: '/ws',
+    clientTracking: true,
 });
 
 wss.on('error', (error) => {
