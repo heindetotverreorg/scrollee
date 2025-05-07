@@ -1,13 +1,14 @@
 import express from 'express';
+import 'dotenv/config'
 import WebSocket, { WebSocketServer } from 'ws';
 import http from 'http';
 import { setRoutes } from './routes/index';
 import { wsController } from './controllers/index';
 
 const app = express();
-const S_PORT = process.env.VITE_S_PORT || 3001;
-const WS_PORT = process.env.VITE_WS_PORT || 3002;
-const host = process.env.VITE_WS_HOST || '';
+const S_PORT = process.env.VITE_S_PORT;
+const WS_PORT = process.env.VITE_WS_PORT;
+const host = process.env.VITE_WS_HOST;
 
 // Middleware
 app.use(express.json());
@@ -21,14 +22,11 @@ app.listen(S_PORT, () => {
     console.log(`Server is running on port ${S_PORT}`);
 });
 
-const port = process.env.VITE_WS_PORT || 3002;
-
 // Set up WebSocket server
 const server = http.createServer(app);
 
 const wss = new WebSocket.Server({
-    server,
-    path: '/ws',
+    server
 });
 
 wss.on('error', (error) => {
@@ -36,7 +34,7 @@ wss.on('error', (error) => {
     wss.close();
 });
 
-server.listen(port as number, host as string, () => {
+server.listen(parseInt(WS_PORT as string), host as string, () => {
     const address = server.address();
     console.log(`WebSocket server is listening on ${JSON.stringify(address)}`);
 })

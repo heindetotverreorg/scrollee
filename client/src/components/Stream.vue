@@ -29,15 +29,12 @@
         streamName: string,
         wsHost: string
     }>()
-    
-    // const wsHost = import.meta.env.VITE_WS_HOST || '172.20.0.2'
 
-    const wsPort = import.meta.env.VITE_WS_PORT || '3002'
-    const wsProtocol = import.meta.env.VITE_WS_PROTOCOL || 'ws'
+    const wsPort = import.meta.env.VITE_WS_PORT
 
-    console.log(`Attempting to connect to: ${wsProtocol}://${wsHost}:${wsPort}/ws`)
+    console.log(`Attempting to connect to: ws://${wsHost}:${wsPort}`)
 
-    const { status, data, send, open, close } = useWebSocket(`${wsProtocol}://${wsHost}:${wsPort}/ws`, {
+    const { status, data, send, open, close } = useWebSocket(`ws://${wsHost}:${wsPort}`, {
         immediate: false,
         onError: (e) => {
             console.error('WebSocket error:', e)
