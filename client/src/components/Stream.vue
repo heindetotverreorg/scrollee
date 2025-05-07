@@ -36,8 +36,11 @@
 
     const { status, data, send, open, close } = useWebSocket(`ws://${wsHost}:${wsPort}`, {
         immediate: false,
-        onError: (e) => {
-            console.error('WebSocket error:', e)
+        onError: (wss) => {
+            // console.error('WebSocket error:', wss)
+            wss.onerror = (e) => {
+                console.error('WebSocket error:', e)
+            }
         }
     })
 

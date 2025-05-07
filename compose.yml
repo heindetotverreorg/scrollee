@@ -11,6 +11,12 @@ services:
       - VITE_WS_HOST=0.0.0.0
       - NODE_ENV=production
     ports:
-      - "3001:3001"
-      - "3002:3002"
+      - "0.0.0.0:3001:3001"
+      - "0.0.0.0:3002:3002"
+    networks:
+      - scrollee-net
     command: node dist/server/src/app.js
+
+networks:
+  scrollee-net:
+    driver: bridge
