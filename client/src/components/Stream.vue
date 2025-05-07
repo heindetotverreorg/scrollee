@@ -30,7 +30,7 @@
         wsHost: string
     }>()
 
-    const wsPort = import.meta.env.VITE_WS_PORT
+    const wsPort = import.meta.env.VITE_WS_PORT || 3002
 
     console.log(`Attempting to connect to: ws://${wsHost}:${wsPort}`)
 
