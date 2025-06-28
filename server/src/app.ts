@@ -3,7 +3,7 @@ import 'dotenv/config'
 import WebSocket, { WebSocketServer } from 'ws';
 import http from 'http';
 import { setRoutes } from './routes/index';
-import { wsController } from './controllers/index';
+import { wsController } from './controllers/websocket';
 
 const app = express();
 const S_PORT = process.env.VITE_S_PORT;

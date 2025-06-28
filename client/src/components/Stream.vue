@@ -51,8 +51,8 @@
         }
     })
 
-    watch(data, (newValue) => {
-        if (newValue) {
+    watch(data, (incomingStream) => {
+        if (incomingStream) {
             const {
                 streamData: incomingStreamData, 
                 streamStatus : incomingStreamStatus,

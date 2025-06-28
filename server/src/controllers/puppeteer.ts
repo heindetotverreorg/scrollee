@@ -1,5 +1,5 @@
 import puppeteer from 'puppeteer-extra';
-import { Page, Browser, KnownDevices, ElementHandle } from 'puppeteer';
+import { Page, KnownDevices } from 'puppeteer';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import WebSocket from 'ws';
 import { Stream, StreamConfig, Selectors, Action, StreamResponse, StreamStatus } from '@shared/types';

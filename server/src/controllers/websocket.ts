@@ -1,16 +1,9 @@
-import path from 'path';
-import { Request, Response } from 'express';
 import WebSocket, { WebSocketServer } from 'ws';
 import { puppeteerRequestController, puppeteerConnectionController } from './puppeteer'; 
 import { Browser,Page } from 'puppeteer';
 import { REQUEST_TYPES } from '@shared/constants';
 import { StreamConnectionsPayload, StreamResponse, StreamStatus } from '@shared/types';
 
-const clientController = {
-    serveClient: (req: Request, res: Response) => {
-        res.sendFile(path.join(__dirname, '../../../client/index.html'));
-    }
-}
 
 const wsController = {
     handleWebSocket: (wss : WebSocketServer) => {
@@ -46,7 +39,7 @@ const wsController = {
     }
 }
 
-export { clientController, wsController }
+export { wsController }
 
 const connectToStream = async ({ ws, data, connections, clientId } : StreamConnectionsPayload) => {
     ws?.send(makeMessage(StreamStatus.CONNECTING, clientId));

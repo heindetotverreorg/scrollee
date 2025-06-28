@@ -1,7 +1,7 @@
 // filepath: /typescript-express-app/typescript-express-app/server/src/routes/index.ts
 import { Router } from 'express';
 import path from 'path';
-import { clientController } from '../controllers/index';
+import { clientController } from '@/controllers/client';
 
 const router = Router();
 
