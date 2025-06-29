@@ -1,13 +1,12 @@
 <template>
     <section class="stream">
         status: {{ streamStatus || webSocketStatus.toLowerCase() }}
-        <div v-if="status === 'CLOSED'">
+        <div v-if="webSocketStatus === WebSocketStatus.CLOSED">
         <button @click="onOpen">Open {{ streamName }}</button>
         </div>
-        <div v-if="status === 'OPEN'">
-        <button @click="onClose">Close {{ streamName }}</button>
-        </div>
-        <div v-if="status === 'OPEN'">
+        <div v-if="webSocketStatus === WebSocketStatus.OPEN">
+            <button @click="sendMessage(REQUEST_TYPES.CONNECT)">Connect {{ streamName }}</button>
+            <button @click="onClose">Close {{ streamName }}</button>
             <div>
                 <button @click="sendMessage(REQUEST_TYPES.FETCH)">Receive data</button>
                 <slot />
