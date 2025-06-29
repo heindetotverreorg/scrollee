@@ -1,6 +1,6 @@
 import express from 'express';
 import 'dotenv/config'
-import WebSocket, { WebSocketServer } from 'ws';
+import WebSocket from 'ws';
 import http from 'http';
 import { setRoutes } from './routes/index';
 import { wsController } from './controllers/websocket';

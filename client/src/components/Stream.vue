@@ -33,20 +33,22 @@
     const clientId = ref('')
 
     const wsPath = import.meta.env.VITE_WS_PATH || 'scrollee.heindetotverre.com'
-    const fullPath = `ws://${wsPath}/ws`
+    const isServer = window.location.protocol === 'https:'
+    const protocol = isServer ? 'wss' : 'ws'
+    const fullPath = `${protocol}://${wsPath}/ws`
 
     const { status, data, send, open, close } = useWebSocket(fullPath, {
         immediate: false
     })
 
-    watch(streamStatus, (newValue) => {
-        if (newValue === StreamStatus.CONNECTED) {
+    watch(streamStatus, (newStatus) => {
+        if (newStatus === StreamStatus.CONNECTED) {
             sendMessage(REQUEST_TYPES.FETCH)
         }
     })
 
-    watch(status, (newValue) => {
-        if (newValue === 'OPEN') {
+    watch(status, (webSocketStatus) => {
+        if (webSocketStatus === 'OPEN') {
             sendMessage(REQUEST_TYPES.CONNECT)
         }
     })
@@ -58,7 +60,7 @@
                 streamStatus : incomingStreamStatus,
                 error: incomingError,
                 clientId: incomingClientId
-            } = JSON.parse(newValue) || {} as StreamResponse
+            } = JSON.parse(incomingStream) || {} as StreamResponse
 
             if (incomingStreamData) {
                 streamData.value = incomingStreamData
