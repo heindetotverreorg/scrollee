@@ -1,6 +1,6 @@
 <template>
     <section class="stream">
-        status: {{ streamStatus || status.toLowerCase() }}
+        status: {{ streamStatus || webSocketStatus.toLowerCase() }}
         <div v-if="status === 'CLOSED'">
         <button @click="onOpen">Open {{ streamName }}</button>
         </div>
@@ -14,8 +14,9 @@
             </div>
         </div>
         <div v-if="streamStatus && streamData" v-html="streamData" />
+        
     </section>
-  </template>
+</template>
 <script setup lang="ts">
     import { ref, watch, onMounted } from 'vue'
     import { useWebSocket } from '@vueuse/core'
@@ -29,7 +30,7 @@
 
     const streamData = ref('')
     const streamStatus = ref('')
-    const error = ref('')
+    const streamError = ref('')
     const clientId = ref('')
 
     const wsPath = import.meta.env.VITE_WS_PATH || 'scrollee.heindetotverre.com'
@@ -37,7 +38,7 @@
     const protocol = isServer ? 'wss' : 'ws'
     const fullPath = `${protocol}://${wsPath}/ws`
 
-    const { status, data, send, open, close } = useWebSocket(fullPath, {
+    const { status: webSocketStatus, data, send, open, close } = useWebSocket(fullPath, {
         immediate: false
     })
 
@@ -47,8 +48,8 @@
         }
     })
 
-    watch(status, (webSocketStatus) => {
-        if (webSocketStatus === 'OPEN') {
+    watch(webSocketStatus, (newWebSocketStatus) => {
+        if (newWebSocketStatus === 'OPEN') {
             sendMessage(REQUEST_TYPES.CONNECT)
         }
     })
@@ -58,8 +59,8 @@
             const {
                 streamData: incomingStreamData, 
                 streamStatus : incomingStreamStatus,
-                error: incomingError,
-                clientId: incomingClientId
+                error: incomingStreamError,
+                clientId: incomingStreamId
             } = JSON.parse(incomingStream) || {} as StreamResponse
 
             if (incomingStreamData) {
@@ -68,11 +69,11 @@
             if (incomingStreamStatus) {
                 streamStatus.value = incomingStreamStatus
             }
-            if (incomingError) {
-                error.value = incomingError
+            if (incomingStreamError) {
+                streamError.value = incomingStreamError
             }
-            if (incomingClientId) {
-                clientId.value = incomingClientId
+            if (incomingStreamId) {
+                clientId.value = incomingStreamId
             }
         }
     })

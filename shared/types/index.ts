@@ -77,6 +77,13 @@ enum StreamStatus {
     READY = 'ready',
 }
 
+enum WebSocketStatus {
+    CONNECTING = 'CONNECTING',
+    OPEN = 'OPEN',
+    CLOSING = 'CLOSING',
+    CLOSED = 'CLOSED',
+}
+
 export type { StreamConfig, StreamConnectionsPayload, Stream, Selectors, Action, StreamResponse };
 
-export { StreamStatus }
+export { StreamStatus, WebSocketStatus }

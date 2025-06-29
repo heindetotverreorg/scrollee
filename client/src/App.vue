@@ -11,15 +11,15 @@
         </div>
     </div>
     <div class="streams">
-        <Stream v-for="stream of streams" :stream-name="stream">
+        <StreamControl v-for="stream of streams" :stream-name="stream">
             <div>
                 <button @click="removeStream(stream)">Remove stream</button>
             </div>
-        </Stream>
+        </StreamControl>
     </div>
 </template>
 <script setup lang="ts">
-    import Stream from '@/components/Stream.vue'
+    import StreamControl from '@/components/StreamControl.vue'
     import { ref, Ref } from 'vue'
     import { presetStreams } from '@shared/models/streams'
   
