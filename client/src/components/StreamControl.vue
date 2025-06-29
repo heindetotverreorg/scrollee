@@ -22,7 +22,7 @@
     import { useWebSocket } from '@vueuse/core'
     import { REQUEST_TYPES } from '@shared/constants'
     import { presetStreams } from '@shared/models/streams'
-    import { Stream, StreamResponse, StreamStatus } from '@shared/types'
+    import { Stream, StreamResponse, StreamStatus, WebSocketStatus } from '@shared/types'
 
     const { streamName } = defineProps<{
         streamName: string
