@@ -12,8 +12,11 @@
                 <slot />
             </div>
         </div>
-        <div v-if="streamStatus && streamData" v-html="streamData" />
-        
+        <StreamDataHandler
+            v-if="streamStatus && streamData"
+            :stream-data="streamData"
+            :stream-id="clientId"    
+        />
     </section>
 </template>
 <script setup lang="ts">
@@ -21,13 +24,14 @@
     import { useWebSocket } from '@vueuse/core'
     import { REQUEST_TYPES } from '@shared/constants'
     import { presetStreams } from '@shared/models/streams'
-    import { Stream, StreamResponse, StreamStatus, WebSocketStatus } from '@shared/types'
+    import { Stream, StreamResponse, StreamStatus, WebSocketStatus, ArticleData } from '@shared/types'
+    import StreamDataHandler from '@/components/StreamDataHandler.vue'
 
     const { streamName } = defineProps<{
         streamName: string
     }>()
 
-    const streamData = ref('')
+    const streamData = ref([] as ArticleData[])
     const streamStatus = ref('')
     const streamError = ref('')
     const clientId = ref('')
@@ -63,7 +67,9 @@
             } = JSON.parse(incomingStream) || {} as StreamResponse
 
             if (incomingStreamData) {
-                streamData.value = incomingStreamData
+                const parsedStreamData = JSON.parse(incomingStreamData) as ArticleData[]
+
+                streamData.value = parsedStreamData
             }
             if (incomingStreamStatus) {
                 streamStatus.value = incomingStreamStatus
@@ -82,7 +88,7 @@
             name,
             url,
             config
-        } = presetStreams.find((stream : Stream) => stream.name === streamName)
+        } = presetStreams.find((stream : Stream) => stream.name === streamName) as Stream
 
         send(JSON.stringify({ requestType, stream: { name, url, config } }));
     }

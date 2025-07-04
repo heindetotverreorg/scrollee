@@ -6,16 +6,10 @@ interface StreamConfig {
         subreddits?: string[];
     };
     useLogin: boolean;
-    loginData: {
-        selectors: Selectors
-    };
+    loginData: Selectors;
     hasCookieBanner: boolean;
-    cookieBannerData: {
-        selectors: Selectors
-    }
-    articleData: {
-        selectors: Selectors;
-    }
+    cookieBannerData: Selectors
+    articleData: Selectors
     refreshInterval: number;
     type: 'dom';
 }
@@ -63,6 +57,15 @@ interface StreamResponse {
     clientId?: string
 }
 
+interface ArticleData {
+    text: string;
+    html: string;
+    href?: string;
+    title?: string;
+    image?: string;
+    date?: string;
+}
+
 enum StreamStatus {
     SUCCESS = 'success',
     ERROR = 'error',
@@ -84,6 +87,6 @@ enum WebSocketStatus {
     CLOSED = 'CLOSED',
 }
 
-export type { StreamConfig, StreamConnectionsPayload, Stream, Selectors, Action, StreamResponse };
+export type { StreamConfig, StreamConnectionsPayload, Stream, Selectors, Action, StreamResponse, ArticleData };
 
 export { StreamStatus, WebSocketStatus }

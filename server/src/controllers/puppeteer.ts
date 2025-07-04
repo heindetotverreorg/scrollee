@@ -68,9 +68,8 @@ const puppeteerRequestController = {
     handlePuppeteerRequest: async (data: WebSocket.Data, page: Page) => {
         const {
             stream: {
-                name,
                 config: {
-                    articleData: { selectors }
+                    articleData: selectors
                 },
             }
         } = JSON.parse(data as string);
@@ -87,7 +86,7 @@ const puppeteerRequestController = {
     handleAuthenticate: async (config : StreamConfig, page : Page) => {
         handleAuthenticationRequestLogs(page);
 
-        const { loginData: { selectors } } = config;
+        const { loginData: selectors } = config;
     
         const actions = await getActions(page, selectors);
         await doActions(actions, page);
@@ -103,7 +102,7 @@ const puppeteerRequestController = {
         }
     },
     handleCookieBanner: async (config : StreamConfig, page : Page) => {
-        const { cookieBannerData: { selectors } } = config as StreamConfig;
+        const { cookieBannerData: selectors } = config as StreamConfig;
 
         const actions = await getActions(page, selectors);
         await doActions(actions, page);
@@ -161,6 +160,8 @@ const handleError = (error: any, page: Page) => {
 const getActions = async (page : Page, selectors : Selectors) : Promise<Action[]> => {
     let actions : Action[] = [];
 
+    console.log('Selectors:', selectors);
+
     for (const selector of Object.values(selectors)) {
         const { useShadowRoot, selector: elementSelector } = selector;
 
@@ -200,7 +201,11 @@ const doActions = async (actions : Action[], page : Page) => {
                 const elements = document.querySelectorAll(meta.selector);
                 return Array.from(elements).map(article => ({
                     text: article.textContent,
-                    html: article.innerHTML
+                    html: article.innerHTML,
+                    href: article instanceof HTMLAnchorElement ? article.href : null,
+                    title: article instanceof HTMLHeadingElement ? article.textContent : null,
+                    image: article instanceof HTMLImageElement ? article.src : null,
+                    date: article instanceof HTMLTimeElement ? article.dateTime : null
                 }));
             }, meta);
         }

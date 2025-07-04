@@ -1,5 +1,9 @@
 import { Stream, StreamConfig } from "../types";
-import presetStreams from './preset-streams.json'
+import presetStreamsJson from './preset-streams.json';
+
+// Type assertion for the imported JSON array
+const presetStreams: Stream[] = presetStreamsJson as unknown as Stream[];
+
 
 function createStream(
     title: string,
@@ -13,13 +17,12 @@ function createStream(
             subreddits: [],
         },
         useLogin: true,
-        loginData: {
-            username: '',
-            password: '',
-        },
+        loginData: {},
+        hasCookieBanner: false,
+        cookieBannerData: {},
+        articleData: {},
         refreshInterval: 10000,
-        type: 'dom',
-        selectors: null,
+        type: 'dom'
     };
 
     return {

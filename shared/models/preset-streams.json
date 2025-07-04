@@ -7,44 +7,38 @@
         },
         "useLogin": true,
         "loginData": {
-            "selectors": {
-                "username": {
-                    "selector": "#login-username",
-                    "useShadowRoot": true,
-                    "action": "type",
-                    "value": "matthiaspoortvliet@me.com"
-                },
-                "password": {
-                    "selector": "#login-password",
-                    "useShadowRoot": true,
-                    "action": "type",
-                    "value": "10*Matthias",
-                    "waitFor": "button.login:not([disabled])"
-                },
-                "loginButton": {
-                    "selector": "button.login",
-                    "useShadowRoot": false,
-                    "action": "click"
-                }
+            "username": {
+                "selector": "#login-username",
+                "useShadowRoot": true,
+                "action": "type",
+                "value": "matthiaspoortvliet@me.com"
+            },
+            "password": {
+                "selector": "#login-password",
+                "useShadowRoot": true,
+                "action": "type",
+                "value": "10*Matthias",
+                "waitFor": "button.login:not([disabled])"
+            },
+            "loginButton": {
+                "selector": "button.login",
+                "useShadowRoot": false,
+                "action": "click"
             }
         },
         "hasCookieBanner": true,
         "cookieBannerData": {
-            "selectors": {
-                "cookieBanner": {
-                    "selector": "#accept-all-cookies-button button",
-                    "useShadowRoot": true,
-                    "action": "click"
-                }
+            "cookieBanner": {
+                "selector": "#accept-all-cookies-button button",
+                "useShadowRoot": true,
+                "action": "click"
             }
         },
         "articleData": {
-            "selectors": {
-                "articles": {
-                    "selector": "article",
-                    "useShadowRoot": false,
-                    "action": "get"
-                }
+            "articles": {
+                "selector": "article",
+                "useShadowRoot": false,
+                "action": "get"
             }
         },
         "refreshInterval": 10000,
@@ -84,21 +78,17 @@
         "loginData": null,
         "hasCookieBanner": true,
         "cookieBannerData": {
-            "selectors": {
-                "cookieBanner": {
-                    "selector": "#consent-plugin button.full",
-                    "useShadowRoot": false,
-                    "action": "click"
-                }
+            "cookieBanner": {
+                "selector": "#consent-plugin button.full",
+                "useShadowRoot": false,
+                "action": "click"
             }
         },
         "articleData": {
-            "selectors": {
-                "articles": {
-                    "selector": ".groei-list-item",
-                    "useShadowRoot": false,
-                    "action": "get"
-                }
+            "articles": {
+                "selector": ".groei-list-item",
+                "useShadowRoot": false,
+                "action": "get"
             }
         },
         "refreshInterval": 10000,
@@ -116,12 +106,10 @@
         "hasCookieBanner": false, 
         "cookieBannerData": null,
         "articleData": {
-            "selectors": {
-                "articles": {
-                    "selector": "li",
-                    "useShadowRoot": false,
-                    "action": "get"
-                }
+            "articles": {
+                "selector": "li",
+                "useShadowRoot": false,
+                "action": "get"
             }
         },
         "refreshInterval": 10000,
@@ -139,21 +127,17 @@
         "loginData": null,
         "hasCookieBanner": true, 
         "cookieBannerData": {
-            "selectors": {
-                "articles": {
-                    "selector": ".cmpboxbtnyes",
-                    "useShadowRoot": true,
-                    "action": "click"
-                }
+            "articles": {
+                "selector": ".cmpboxbtnyes",
+                "useShadowRoot": true,
+                "action": "click"
             }
         },
         "articleData": {
-            "selectors": {
-                "articles": {
-                    "selector": ".c-articles-list__item",
-                    "useShadowRoot": false,
-                    "action": "get"
-                }
+            "articles": {
+                "selector": ".c-articles-list__item",
+                "useShadowRoot": false,
+                "action": "get"
             }
         },
         "refreshInterval": 10000,
@@ -172,15 +156,13 @@
         "hasCookieBanner": false, 
         "cookieBannerData": null,
         "articleData": {
-            "selectors": {
-                "title": {
-                    "selector": "tbody tr td .titleline",
-                    "attribute": "text"
-                },
-                "url": {
-                    "selector": "tbody tr td .titleline",
-                    "attribute": "href"
-                }
+            "title": {
+                "selector": "tbody tr td .titleline",
+                "attribute": "text"
+            },
+            "url": {
+                "selector": "tbody tr td .titleline",
+                "attribute": "href"
             }
         },
         "refreshInterval": 10000,
