@@ -18,8 +18,12 @@
     import { useArticleMapping } from '@/composables/useArticleMapping'
     import StreamImage from './StreamImage.vue';
 
-    const { article } = defineProps<{
-        article: ArticleData
+    const {
+        article,
+        streamRootUrl
+     } = defineProps<{
+        article: ArticleData,
+        streamRootUrl: string
     }>()
 
     const {
@@ -28,7 +32,7 @@
         text,
         images,
         url
-    } = useArticleMapping(article)
+    } = useArticleMapping(article, streamRootUrl)
 </script>
 
 <style scoped>

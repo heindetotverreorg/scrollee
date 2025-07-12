@@ -1,12 +1,15 @@
 import { ArticleData } from '@shared/types'
 
-export function useArticleMapping(article : ArticleData) {
+export function useArticleMapping(
+    article : ArticleData,
+    streamRootUrl : string = ''
+) {
     const hasMeaningfulContent = article.text.length > 40
     const title = getTitleFromArticle(article) || article.title
     const text = article.text || ''
     const images = getImagesFromHtml(article.html) || article.image || ''
     const date = new Date(article.date as string).toLocaleDateString()
-    const url = getArticleUrlFromHtml(article.html) || article.href || ''
+    const url = getArticleUrlFromHtml(article.html, streamRootUrl) || article.href || ''
 
     return {
         hasMeaningfulContent,
@@ -18,13 +21,18 @@ export function useArticleMapping(article : ArticleData) {
     }
 }
 
-function getArticleUrlFromHtml(html : string) : string | null {
+function getArticleUrlFromHtml(html : string, streamRootUrl : string) : string | null {
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
     const linkElement = doc.querySelector('a');
 
     if (linkElement && linkElement instanceof HTMLAnchorElement) {
-        return linkElement.href;
+
+        const path = linkElement.pathname || '';
+
+        const combinedUrl = `${streamRootUrl}/${path}`;
+
+        return combinedUrl
     }
 
     return null; // Return null if no link found

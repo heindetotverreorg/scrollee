@@ -3,6 +3,7 @@
         v-for="article, index in streamData"
         :key="`${streamId}_${index}`" 
         :article="article"
+        :stream-root-url="streamRootUrl"
     />
 </template>
 
@@ -10,15 +11,17 @@
     import { ArticleData } from '@shared/types'
     import StreamArticle from '@/components/StreamArticle.vue';
 
-    const { streamData, streamId } = defineProps<{
+    const { 
+        streamData, 
+        streamId,  
+        streamRootUrl 
+    } = defineProps<{
         streamData: ArticleData[],
-        streamId: string
+        streamId: string,
+        streamRootUrl: string
     }>()
 
 </script>
 
 <style scoped>
-.stream-data {
-    
-}
 </style>

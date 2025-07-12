@@ -17,13 +17,14 @@
         </div>
         <StreamList
             v-if="streamStatus && streamData"
+            :stream-root-url="streamRootUrl"
             :stream-data="streamData"
             :stream-id="clientId"    
         />
     </section>
 </template>
 <script setup lang="ts">
-    import { ref, watch, onMounted } from 'vue'
+    import { computed, ref, watch, onMounted, unref } from 'vue'
     import { useWebSocket } from '@vueuse/core'
     import { REQUEST_TYPES } from '@shared/constants'
     import { presetStreams } from '@shared/models/streams'
@@ -51,6 +52,17 @@
         open 
     } = useWebSocket(fullPath, {
         immediate: false
+    })
+
+    const chosenStream = computed(() => presetStreams.find((stream : Stream) => stream.name === streamName) as Stream)
+
+    const streamRootUrl = computed(() => {
+        let { url } = unref(chosenStream)
+
+        url = url.replace(/\/$/, '') // Remove trailing slash if present
+        url = url.split('/')[0] + '//' + url.split('/')[2] // Reconstruct the URL to get the root
+
+        return url
     })
 
     watch(streamStatus, (newStatus) => {
@@ -96,7 +108,7 @@
             name,
             url,
             config
-        } = presetStreams.find((stream : Stream) => stream.name === streamName) as Stream
+        } = unref(chosenStream)
 
         send(JSON.stringify({ requestType, stream: { name, url, config } }));
     }
