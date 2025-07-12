@@ -2,17 +2,20 @@
     <section class="stream">
         status: {{ streamStatus || webSocketStatus.toLowerCase() }}
         <div v-if="webSocketStatus === WebSocketStatus.CLOSED">
-        <button @click="onOpen">Open {{ streamName }}</button>
+            <button @click="onOpen">Open {{ streamName }}</button>
         </div>
-        <div v-if="webSocketStatus === WebSocketStatus.OPEN">
+        <div v-else>
+            <slot />
+        </div>
+        <div v-if="streamStatus === StreamStatus.DISCONNECTED">
             <button @click="sendMessage(REQUEST_TYPES.CONNECT)">Connect {{ streamName }}</button>
-            <button @click="onClose">Close {{ streamName }}</button>
+        </div>
+        <div v-if="streamStatus === StreamStatus.SUCCESS">
             <div>
                 <button @click="sendMessage(REQUEST_TYPES.FETCH)">Receive data</button>
-                <slot />
             </div>
         </div>
-        <StreamDataHandler
+        <StreamList
             v-if="streamStatus && streamData"
             :stream-data="streamData"
             :stream-id="clientId"    
@@ -25,14 +28,14 @@
     import { REQUEST_TYPES } from '@shared/constants'
     import { presetStreams } from '@shared/models/streams'
     import { Stream, StreamResponse, StreamStatus, WebSocketStatus, ArticleData } from '@shared/types'
-    import StreamDataHandler from '@/components/StreamDataHandler.vue'
+    import StreamList from '@/components/StreamList.vue'
 
     const { streamName } = defineProps<{
         streamName: string
     }>()
 
     const streamData = ref([] as ArticleData[])
-    const streamStatus = ref('')
+    const streamStatus = ref('' as StreamStatus)
     const streamError = ref('')
     const clientId = ref('')
 
@@ -41,7 +44,12 @@
     const protocol = isServer ? 'wss' : 'ws'
     const fullPath = `${protocol}://${wsPath}/ws`
 
-    const { status: webSocketStatus, data, send, open, close } = useWebSocket(fullPath, {
+    const {
+        status: webSocketStatus, 
+        data, 
+        send, 
+        open 
+    } = useWebSocket(fullPath, {
         immediate: false
     })
 
@@ -96,10 +104,6 @@
     onMounted(() => {
         open()
     })
-    
-    function onClose() {
-        close();
-    }
     
     function onOpen() {
         open();

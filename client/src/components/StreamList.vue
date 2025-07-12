@@ -1,5 +1,9 @@
 <template>
-    <StreamArticle v-for="article, index in streamData" :key="`${streamId}_${index}`" :article="article" />
+    <StreamArticle
+        v-for="article, index in streamData"
+        :key="`${streamId}_${index}`" 
+        :article="article"
+    />
 </template>
 
 <script lang="ts" setup>
