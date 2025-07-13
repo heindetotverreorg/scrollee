@@ -30,7 +30,7 @@ function getArticleUrlFromHtml(html : string, streamRootUrl : string) : string |
 
         const path = linkElement.pathname || '';
 
-        const combinedUrl = `${streamRootUrl}/${path}`;
+        const combinedUrl = `${streamRootUrl}${path}`;
 
         return combinedUrl
     }
@@ -45,7 +45,11 @@ function getImagesFromHtml(html : string) : HTMLImageElement[] {
 
     const imgList = Array.from(imgNodeList)
 
-    return imgList
+    const uniqueImgList = imgList.filter((img, index) => {
+        return imgList.findIndex(i => i.src === img.src) === index;
+    });
+
+    return uniqueImgList
 }
 
 function getTitleFromArticle(article : ArticleData) : string | null {
