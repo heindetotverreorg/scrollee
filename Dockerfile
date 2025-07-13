@@ -14,7 +14,7 @@ COPY client/package.json ./client/
 COPY server/package.json ./server/
 COPY yarn.lock .
 
-RUN yarn
+RUN yarn cache clean && yarn
 
 COPY . .
 
