@@ -65,7 +65,7 @@
         return url
     })
 
-    watch(streamStatus, (newStatus) => {
+    watch(streamStatus, async (newStatus) => {
         if (newStatus === StreamStatus.CONNECTED) {
             sendMessage(REQUEST_TYPES.FETCH)
         }
@@ -123,6 +123,7 @@
 </script>
 <style scoped lang="scss">
     .stream {
-        width: 200px;
+        min-width: 250px;
+        width: 250px;
     }
 </style>

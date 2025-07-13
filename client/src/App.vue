@@ -20,12 +20,19 @@
 </template>
 <script setup lang="ts">
     import StreamControl from '@/components/StreamControl.vue'
-    import { ref, Ref } from 'vue'
+    import { onMounted, ref, Ref, unref } from 'vue'
     import { presetStreams } from '@shared/models/streams'
   
     const chooseStream = ref(false)
     const selectedStream = ref('')
     const streams : Ref<string[]> = ref([])
+
+    onMounted(() => {
+        // Initialize streams with preset streams
+        streams.value = localStorage.getItem('streams') 
+            ? JSON.parse(localStorage.getItem('streams') || '[]') 
+            : []
+    })
 
     const presetStreamsList = presetStreams.map((stream : any) => {
         return stream.name
@@ -35,10 +42,13 @@
         streams.value.push(streamName)
         selectedStream.value = ''
         chooseStream.value = false
+
+        localStorage.setItem('streams', JSON.stringify(unref(streams)));
     }
   
     const removeStream = (streamName : string) => {
         streams.value = streams.value.filter(stream => stream !== streamName)
+        localStorage.setItem('streams', JSON.stringify(unref(streams)));
     }
   </script>
   <style scoped lang="scss">
@@ -49,7 +59,7 @@
 
     .streams {
         display: flex;
-        flex-wrap: wrap;
         gap: 10px;
+        overflow-x: auto;
     }
   </style>
