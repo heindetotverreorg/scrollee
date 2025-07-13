@@ -28,7 +28,6 @@
     const streams : Ref<string[]> = ref([])
 
     onMounted(() => {
-        // Initialize streams with preset streams
         streams.value = localStorage.getItem('streams') 
             ? JSON.parse(localStorage.getItem('streams') || '[]') 
             : []

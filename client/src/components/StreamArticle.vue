@@ -1,5 +1,6 @@
 <template>
     <div v-if="hasMeaningfulContent" class="stream-article">
+        {{ createdAt }}
         <a v-if="url" :href="url" target="_blank" rel="noopener noreferrer">
             {{ title }}
         </a>
@@ -31,7 +32,8 @@
         title, 
         text,
         images,
-        url
+        url,
+        createdAt
     } = useArticleMapping(article, streamRootUrl)
 </script>
 

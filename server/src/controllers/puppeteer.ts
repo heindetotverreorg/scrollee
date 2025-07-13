@@ -205,7 +205,8 @@ const doActions = async (actions : Action[], page : Page) => {
                     href: article instanceof HTMLAnchorElement ? article.href : null,
                     title: article instanceof HTMLHeadingElement ? article.textContent : null,
                     image: article instanceof HTMLImageElement ? article.src : null,
-                    date: article instanceof HTMLTimeElement ? article.dateTime : null
+                    date: article instanceof HTMLTimeElement ? article.dateTime : null,
+                    createdAt: new Date().toISOString()
                 }));
             }, meta);
         }

@@ -17,7 +17,8 @@ export function useArticleMapping(
         text,
         images,
         date,
-        url
+        url,
+        createdAt: article.createdAt
     }
 }
 

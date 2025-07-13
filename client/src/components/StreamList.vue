@@ -1,4 +1,5 @@
 <template>
+    <h3>{{ streamName }}</h3>
     <StreamArticle
         v-for="article, index in streamData"
         :key="`${streamId}_${index}`" 
@@ -14,11 +15,13 @@
     const { 
         streamData, 
         streamId,  
-        streamRootUrl 
+        streamRootUrl,
+        streamName
     } = defineProps<{
         streamData: ArticleData[],
         streamId: string,
-        streamRootUrl: string
+        streamRootUrl: string,
+        streamName: string
     }>()
 
 </script>

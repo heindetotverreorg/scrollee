@@ -18,6 +18,7 @@
         <StreamList
             v-if="streamStatus && streamData"
             :stream-root-url="streamRootUrl"
+            :stream-name="streamName"
             :stream-data="streamData"
             :stream-id="clientId"    
         />
