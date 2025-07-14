@@ -1,6 +1,6 @@
 <template>
     <img 
-        v-for="image, index of images" 
+        v-for="image, index of imageSrcs"
         :key="index"
         :src="image.src" 
         :alt="image.alt || 'Stream Image'"
@@ -8,9 +8,17 @@
     />
 </template>
 <script lang="ts" setup>
+    import { computed } from 'vue'
+
     const { images } = defineProps<{
         images: HTMLImageElement[]
     }>()
+
+    const imageSrcs = computed(() => {
+        return images.filter((image: HTMLImageElement) => {
+            return image.src
+        })
+    })
 </script>
 <style scoped>
 .stream-image {

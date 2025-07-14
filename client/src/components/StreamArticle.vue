@@ -45,5 +45,6 @@
     margin-bottom: 20px;
     background-color: #f9f9f9;
     overflow: hidden;
+    scroll-snap-align: start;
 }
 </style>

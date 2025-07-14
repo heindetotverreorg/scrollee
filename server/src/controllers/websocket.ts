@@ -28,7 +28,7 @@ const wsController = {
             });
 
             ws.on('close', () => {
-                clearInterval(fetchInterval);
+                // clearInterval(fetchInterval);
                 closeStream({ connections, clientId });
             });
 
@@ -36,18 +36,18 @@ const wsController = {
                 console.error('WebSocket error:', error);
                 ws.send(makeMessage(StreamStatus.ERROR, clientId, undefined, error.message));
                 
-                clearInterval(fetchInterval);
+                // clearInterval(fetchInterval);
                 ws.close();
             });
 
             // timer based fetching
-            const fetchInterval = setInterval(() => {
-                if (connections[clientId]) {
-                    console.log('===> Interval based: ' + clientId + ' - Fetching data from stream');
-                    const data = connections[clientId].data;
-                    fetchFromStream({ ws, data, connections, clientId });
-                }
-            }, 20000);
+            // const fetchInterval = setInterval(() => {
+            //     if (connections[clientId]) {
+            //         console.log('===> Interval based: ' + clientId + ' - Fetching data from stream');
+            //         const data = connections[clientId].data;
+            //         fetchFromStream({ ws, data, connections, clientId });
+            //     }
+            // }, 20000);
         });
     }
 }
@@ -73,7 +73,7 @@ const fetchFromStream = async ({ ws, data, connections, clientId } : StreamConne
     }
     const { page } = connections[clientId] as { page: Page };
     ws?.send(makeMessage(StreamStatus.PENDING));
-    const response = await puppeteerRequestController.handlePuppeteerRequest(data as string, page);
+    const response = await puppeteerRequestController.handleFetchRequest(data as string, page);
     ws?.send(JSON.stringify(response));
 }
 

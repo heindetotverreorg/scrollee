@@ -49,18 +49,24 @@
         streams.value = streams.value.filter(stream => stream !== streamName)
         localStorage.setItem('streams', JSON.stringify(unref(streams)));
     }
-  </script>
-  <style scoped lang="scss">
+</script>
+<style scoped lang="scss">
     .stream-setup {
         height: 50px;
-        margin-bottom :20px;
     }
 
     .streams {
-        height: calc(100vh - 90px);
+        height: calc(100vh - 50px);
         display: flex;
         gap: 10px;
         overflow-x: auto;
         overflow-y: hidden;
+        scroll-snap-type: x mandatory;
     }
-  </style>
+</style>
+<style lang="scss">
+    body {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+</style>

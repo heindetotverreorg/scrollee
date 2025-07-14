@@ -6,13 +6,13 @@
         </div>
         <div v-else>
             <slot />
-        </div>
-        <div v-if="streamStatus === StreamStatus.DISCONNECTED">
-            <button @click="sendMessage(REQUEST_TYPES.CONNECT)">Connect {{ streamName }}</button>
-        </div>
-        <div v-if="streamStatus === StreamStatus.SUCCESS">
-            <div>
-                <button @click="sendMessage(REQUEST_TYPES.FETCH)">Receive data</button>
+            <div v-if="streamStatus === StreamStatus.DISCONNECTED">
+                <button @click="sendMessage(REQUEST_TYPES.CONNECT)">Connect {{ streamName }}</button>
+            </div>
+            <div v-if="streamStatus === StreamStatus.SUCCESS">
+                <div>
+                    <button @click="sendMessage(REQUEST_TYPES.FETCH)">Receive data</button>
+                </div>
             </div>
         </div>
         <h3>{{ streamName }}</h3>
@@ -27,7 +27,7 @@
     </section>
 </template>
 <script setup lang="ts">
-    import { computed, ref, watch, onMounted, unref, nextTick } from 'vue'
+    import { computed, ref, watch, onMounted, unref } from 'vue'
     import { useWebSocket } from '@vueuse/core'
     import { REQUEST_TYPES } from '@shared/constants'
     import { presetStreams } from '@shared/models/streams'
@@ -68,10 +68,9 @@
         return url
     })
 
-    watch(streamStatus, async (newStatus) => {
-        if (newStatus === StreamStatus.CONNECTED) {
+    watch(streamStatus, async (newStreamStatus) => {
+        if (newStreamStatus === StreamStatus.CONNECTED) {
             console.log('FETCH DATA')
-            await nextTick()
             sendMessage(REQUEST_TYPES.FETCH)
         }
     })
@@ -130,10 +129,12 @@
     .stream-wrapper {
         min-width: 250px;
         width: 250px;
+        scroll-snap-align: start;
     }
 
     .stream-list {
         height: 100%;
         overflow: auto;
+        scroll-snap-type: y mandatory;
     }
 </style>

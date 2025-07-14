@@ -65,7 +65,7 @@ const puppeteerConnectionController = {
 
 const puppeteerRequestController = {
     // Puppeteer controller logic can be added here
-    handlePuppeteerRequest: async (data: WebSocket.Data, page: Page) => {
+    handleFetchRequest: async (data: WebSocket.Data, page: Page) => {
         const {
             stream: {
                 config: {
