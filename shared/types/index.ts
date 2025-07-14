@@ -1,5 +1,6 @@
 import { ElementHandle, Browser, Page } from 'puppeteer';
 import WebSocket from 'ws';
+
 interface StreamConfig {
     meta: {
         'home-feed'?: boolean;
@@ -17,10 +18,17 @@ interface StreamConfig {
 interface StreamConnectionsPayload {
     ws?: WebSocket;
     data?: WebSocket.Data;
-    connections: Record<string, Record<string, Browser | Page>>
+    connections: StreamConnections
     clientId: string;
 }
 
+interface StreamConnections {
+    [clientId: string]: {
+        browser?: Browser;
+        page?: Page;
+        data?: string;
+    };
+}
 interface Stream {
     title: string;
     name: string;
@@ -88,6 +96,6 @@ enum WebSocketStatus {
     CLOSED = 'CLOSED',
 }
 
-export type { StreamConfig, StreamConnectionsPayload, Stream, Selectors, Action, StreamResponse, ArticleData };
+export type { StreamConnections, StreamConfig, StreamConnectionsPayload, Stream, Selectors, Action, StreamResponse, ArticleData };
 
 export { StreamStatus, WebSocketStatus }

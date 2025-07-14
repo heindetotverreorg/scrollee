@@ -1,5 +1,5 @@
 <template>
-    <section class="stream">
+    <section class="stream-wrapper">
         status: {{ streamStatus || webSocketStatus.toLowerCase() }}
         <div v-if="webSocketStatus === WebSocketStatus.CLOSED">
             <button @click="onOpen">Open {{ streamName }}</button>
@@ -15,17 +15,19 @@
                 <button @click="sendMessage(REQUEST_TYPES.FETCH)">Receive data</button>
             </div>
         </div>
-        <StreamList
-            v-if="streamStatus && streamData"
-            :stream-root-url="streamRootUrl"
-            :stream-name="streamName"
-            :stream-data="streamData"
-            :stream-id="clientId"    
-        />
+        <h3>{{ streamName }}</h3>
+        <div class="stream-list">
+            <StreamList
+                v-if="streamStatus && streamData"
+                :stream-root-url="streamRootUrl"
+                :stream-data="streamData"
+                :stream-id="clientId"    
+            />
+        </div>
     </section>
 </template>
 <script setup lang="ts">
-    import { computed, ref, watch, onMounted, unref } from 'vue'
+    import { computed, ref, watch, onMounted, unref, nextTick } from 'vue'
     import { useWebSocket } from '@vueuse/core'
     import { REQUEST_TYPES } from '@shared/constants'
     import { presetStreams } from '@shared/models/streams'
@@ -68,6 +70,8 @@
 
     watch(streamStatus, async (newStatus) => {
         if (newStatus === StreamStatus.CONNECTED) {
+            console.log('FETCH DATA')
+            await nextTick()
             sendMessage(REQUEST_TYPES.FETCH)
         }
     })
@@ -123,8 +127,13 @@
     }
 </script>
 <style scoped lang="scss">
-    .stream {
+    .stream-wrapper {
         min-width: 250px;
         width: 250px;
+    }
+
+    .stream-list {
+        height: 100%;
+        overflow: auto;
     }
 </style>

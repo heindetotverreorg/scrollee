@@ -57,8 +57,10 @@
     }
 
     .streams {
+        height: calc(100vh - 90px);
         display: flex;
         gap: 10px;
         overflow-x: auto;
+        overflow-y: hidden;
     }
   </style>

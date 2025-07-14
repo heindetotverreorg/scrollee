@@ -2,12 +2,12 @@ import WebSocket, { WebSocketServer } from 'ws';
 import { puppeteerRequestController, puppeteerConnectionController } from './puppeteer'; 
 import { Browser,Page } from 'puppeteer';
 import { REQUEST_TYPES } from '@shared/constants';
-import { StreamConnectionsPayload, StreamResponse, StreamStatus } from '@shared/types';
+import { StreamConnections, StreamConnectionsPayload, StreamResponse, StreamStatus } from '@shared/types';
 
 
 const wsController = {
     handleWebSocket: (wss : WebSocketServer) => {
-        const connections : Record<string, Record<string, Browser | Page>>  = {};
+        const connections : StreamConnections  = {};
         
         wss.on('connection', (ws: WebSocket) => {
             const clientId = Math.random().toString(36).substring(2, 15);
@@ -21,11 +21,14 @@ const wsController = {
                 }
 
                 if (requestType === REQUEST_TYPES.FETCH) {
+                    // set the paylaod data to the connection
+                    connections[clientId].data = data as string;
                     fetchFromStream({ ws, data, connections, clientId });
                 }
             });
 
             ws.on('close', () => {
+                clearInterval(fetchInterval);
                 closeStream({ connections, clientId });
             });
 
@@ -33,8 +36,18 @@ const wsController = {
                 console.error('WebSocket error:', error);
                 ws.send(makeMessage(StreamStatus.ERROR, clientId, undefined, error.message));
                 
+                clearInterval(fetchInterval);
                 ws.close();
             });
+
+            // timer based fetching
+            const fetchInterval = setInterval(() => {
+                if (connections[clientId]) {
+                    console.log('===> Interval based: ' + clientId + ' - Fetching data from stream');
+                    const data = connections[clientId].data;
+                    fetchFromStream({ ws, data, connections, clientId });
+                }
+            }, 20000);
         });
     }
 }
