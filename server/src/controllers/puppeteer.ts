@@ -75,6 +75,9 @@ const puppeteerRequestController = {
         } = JSON.parse(data as string);
 
         const actions = await getActions(page, selectors);
+
+        console.log('Actions to perform for fetch:', actions);
+
         const articles = await doActions(actions, page) as any
 
         return {
@@ -89,17 +92,10 @@ const puppeteerRequestController = {
         const { loginData: selectors } = config;
     
         const actions = await getActions(page, selectors);
+
+        console.log('Actions to perform for login:', actions);
+
         await doActions(actions, page);
-
-        try {
-            await page.waitForNavigation({
-                waitUntil: 'networkidle2',
-                timeout: 5000
-            });
-
-        } catch (error) {
-            return handleError(error, page);
-        }
     },
     handleCookieBanner: async (config : StreamConfig, page : Page) => {
         const { cookieBannerData: selectors } = config as StreamConfig;
@@ -143,20 +139,6 @@ const handleAuthenticationRequestLogs = (page: Page) => {
     });
 }
 
-const handleError = (error: any, page: Page) => {
-    page.screenshot({ path: 'error.png' });
-    console.log('Error during navigation:', error);
-    console.log('Screenshot saved as error.png');
-
-    console.log('Login failed, please check your credentials and try again.');
-
-    return {
-        streamData: '',
-        streamStatus: StreamStatus.ERROR,
-        error: JSON.stringify(error)
-    } as StreamResponse
-}
-
 const getActions = async (page : Page, selectors : Selectors) : Promise<Action[]> => {
     let actions : Action[] = [];
 
@@ -182,6 +164,8 @@ const getActions = async (page : Page, selectors : Selectors) : Promise<Action[]
                     selector: elementSelector
                 }
             });
+        } else {
+            console.log(`Element with selector "${elementSelector}" not found.`);
         }
     }
 
@@ -211,7 +195,7 @@ const doActions = async (actions : Action[], page : Page) => {
             }, meta);
         }
         if (config.waitFor) {
-            await page.waitForSelector(config.waitFor as string, {  timeout: 1000 });
+            await page.waitForSelector(config.waitFor as string, {  timeout: 10000 });
         }
         console.log(`did the action for ${action} on handle with selector ${meta.selector}`)
     }

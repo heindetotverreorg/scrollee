@@ -16,14 +16,24 @@ const wsController = {
             ws.on('message', async (data: WebSocket.Data) => {
                 const { requestType } = JSON.parse(data as string);
 
-                if (requestType === REQUEST_TYPES.CONNECT) {
-                    connectToStream({ ws, data, connections, clientId });
-                }
+                try {
+                    if (requestType === REQUEST_TYPES.CONNECT) {
+                        console.log('CONNECTING TO STREAM');
+                        await connectToStream({ ws, data, connections, clientId });
+                        console.log('CONNECTED')
+                        console.log('URL:', connections[clientId].page?.url());
+                    }
 
-                if (requestType === REQUEST_TYPES.FETCH) {
-                    // set the paylaod data to the connection
-                    connections[clientId].data = data as string;
-                    fetchFromStream({ ws, data, connections, clientId });
+                    if (requestType === REQUEST_TYPES.FETCH) {
+                        console.log('FETCHING DATA FROM STREAM');
+                        // set the paylaod data to the connection
+                        connections[clientId].data = data as string;
+                        await fetchFromStream({ ws, data, connections, clientId });
+                        console.log('FETCHED DATA');
+                    }
+                } catch (error) {
+                    console.error('Error handling message:', error);
+                    ws.send(makeMessage(StreamStatus.ERROR, clientId, undefined, JSON.stringify(error)));
                 }
             });
 

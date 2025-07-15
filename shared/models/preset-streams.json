@@ -23,7 +23,8 @@
             "loginButton": {
                 "selector": "button.login",
                 "useShadowRoot": false,
-                "action": "click"
+                "action": "click",
+                "waitFor": "shreddit-app[routename='frontpage']"
             }
         },
         "hasCookieBanner": true,
