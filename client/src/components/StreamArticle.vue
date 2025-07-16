@@ -15,17 +15,21 @@
 </template>
 
 <script lang="ts" setup>
+    import { toRefs, watch } from 'vue'
     import { ArticleData } from '@shared/types'
     import { useArticleMapping } from '@/composables/useArticleMapping'
     import StreamImage from './StreamImage.vue';
 
-    const {
-        article,
-        streamRootUrl
-     } = defineProps<{
+    const props = defineProps<{
         article: ArticleData,
         streamRootUrl: string
     }>()
+
+    const { article, streamRootUrl } = toRefs(props)
+
+    watch(article, (newArticle) => {
+        console.log('Article updated:', newArticle)
+    }, { immediate: true })
 
     const {
         hasMeaningfulContent, 
@@ -46,5 +50,10 @@
     background-color: #f9f9f9;
     overflow: hidden;
     scroll-snap-align: start;
+
+    &:last-child {
+        margin-bottom: 50px;
+        scroll-snap-align: end;
+    }
 }
 </style>

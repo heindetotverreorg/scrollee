@@ -1,6 +1,6 @@
 import WebSocket, { WebSocketServer } from 'ws';
 import { puppeteerRequestController, puppeteerConnectionController } from './puppeteer'; 
-import { Browser,Page } from 'puppeteer';
+import { Page } from 'puppeteer';
 import { REQUEST_TYPES } from '@shared/constants';
 import { StreamConnections, StreamConnectionsPayload, StreamResponse, StreamStatus } from '@shared/types';
 
@@ -18,18 +18,13 @@ const wsController = {
 
                 try {
                     if (requestType === REQUEST_TYPES.CONNECT) {
-                        console.log('CONNECTING TO STREAM');
                         await connectToStream({ ws, data, connections, clientId });
-                        console.log('CONNECTED')
-                        console.log('URL:', connections[clientId].page?.url());
                     }
 
                     if (requestType === REQUEST_TYPES.FETCH) {
-                        console.log('FETCHING DATA FROM STREAM');
-                        // set the paylaod data to the connection
+                        // set the payload data to the connection
                         connections[clientId].data = data as string;
                         await fetchFromStream({ ws, data, connections, clientId });
-                        console.log('FETCHED DATA');
                     }
                 } catch (error) {
                     console.error('Error handling message:', error);
@@ -51,13 +46,13 @@ const wsController = {
             });
 
             // timer based fetching
-            // const fetchInterval = setInterval(() => {
+            // const fetchInterval = setInterval(async () => {
             //     if (connections[clientId]) {
-            //         console.log('===> Interval based: ' + clientId + ' - Fetching data from stream');
+            //         console.log('-- Interval based: ' + clientId + '. Fetching data from stream');
             //         const data = connections[clientId].data;
-            //         fetchFromStream({ ws, data, connections, clientId });
+            //         await fetchFromStream({ ws, data, connections, clientId });
             //     }
-            // }, 20000);
+            // }, 30000);
         });
     }
 }
@@ -69,8 +64,8 @@ const connectToStream = async ({ ws, data, connections, clientId } : StreamConne
 
     const { browser, page } = await puppeteerConnectionController.handlePuppeteerConnection(data as string);
     if (!connections[clientId]) connections[clientId] = {};
-    connections[clientId]['browser'] = browser;
-    connections[clientId]['page'] = page;
+    connections[clientId].browser = browser;
+    connections[clientId].page = page;
 
     ws?.send(makeMessage(StreamStatus.CONNECTED, clientId));
 }
@@ -99,10 +94,10 @@ const closeStream = async ({ connections, clientId } : StreamConnectionsPayload)
     const { browser } = connections[clientId];
     if (browser) {
         browser.close();
+        console.log('Browser closed');
     }
 
     delete connections[clientId];
-    console.log('Browser closed');
     console.log('Client emoved');
 }
 

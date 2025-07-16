@@ -8,19 +8,17 @@
 </template>
 
 <script lang="ts" setup>
+    import { toRefs } from 'vue'
     import { ArticleData } from '@shared/types'
     import StreamArticle from '@/components/StreamArticle.vue';
 
-    const { 
-        streamData, 
-        streamId,  
-        streamRootUrl,
-    } = defineProps<{
+    const props = defineProps<{
         streamData: ArticleData[],
         streamId: string,
         streamRootUrl: string
     }>()
 
+    const { streamData, streamId, streamRootUrl } = toRefs(props)
 </script>
 
 <style scoped>

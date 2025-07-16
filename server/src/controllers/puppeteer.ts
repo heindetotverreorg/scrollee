@@ -39,7 +39,6 @@ const puppeteerConnectionController = {
 
         const devices = Object.values(KnownDevices)
         const randomDevice = devices[Math.floor(Math.random() * devices.length)];
-        console.log('Emulating device:', randomDevice);
         await page.emulate(randomDevice);
 
         await page.goto(url, {
@@ -47,12 +46,12 @@ const puppeteerConnectionController = {
         });
 
         if (hasCookieBanner) {
-            console.log('-- Cookie banner detected');
+            console.log(`${stream.name} -- Cookie banner detected`);
             await puppeteerRequestController.handleCookieBanner(config as StreamConfig, page)
         }
 
         if (useLogin) {
-            console.log('-- Login detected');
+            console.log(`${stream.name} -- Login detected`);
             await puppeteerRequestController.handleAuthenticate(config as StreamConfig, page)
         }
 
@@ -74,11 +73,14 @@ const puppeteerRequestController = {
             }
         } = JSON.parse(data as string);
 
+        await page.reload({
+            waitUntil: 'networkidle2',
+        });
+        console.log('-- Page reloaded, fetching new articles...')
+
         const actions = await getActions(page, selectors);
 
-        console.log('Actions to perform for fetch:', actions);
-
-        const articles = await doActions(actions, page) as any
+        const articles = await doActions(actions, page)
 
         return {
             streamData: JSON.stringify(articles),
@@ -87,18 +89,14 @@ const puppeteerRequestController = {
         } as StreamResponse
     },
     handleAuthenticate: async (config : StreamConfig, page : Page) => {
-        handleAuthenticationRequestLogs(page);
-
         const { loginData: selectors } = config;
     
         const actions = await getActions(page, selectors);
 
-        console.log('Actions to perform for login:', actions);
-
         await doActions(actions, page);
     },
     handleCookieBanner: async (config : StreamConfig, page : Page) => {
-        const { cookieBannerData: selectors } = config as StreamConfig;
+        const { cookieBannerData: selectors } = config
 
         const actions = await getActions(page, selectors);
         await doActions(actions, page);
@@ -108,35 +106,6 @@ const puppeteerRequestController = {
 export {
     puppeteerConnectionController,
     puppeteerRequestController
-}
-
-const handleAuthenticationRequestLogs = (page: Page) => {
-    // log all requests and responses related to login
-    page.on("request", async (request) => {
-        const url = request.url();
-        const method = request.method();
-        const postData = request.postData();
-
-        if (method === 'POST' && url.includes('reddit.com/svc/shreddit/account/login')) {
-            console.log(`Request made to: ${url}`);
-            console.log(`Method: ${method}`);
-            console.log(`Post data: ${postData}`);
-        }
-    })
-
-    page.on("response", async (response) => {
-        const url = response.url();
-        const status = response.status();
-        const statusText = response.statusText();
-        const body = await response.text().catch(() => null);
-
-        if (status !== 200 && status !== 204 && status !== 206) {
-            console.log(`Response received from: ${url}`);
-            console.log(`Status: ${status}`);
-            console.log(`Status text: ${statusText}`);
-            console.log(`Body: ${body}`);
-        }
-    });
 }
 
 const getActions = async (page : Page, selectors : Selectors) : Promise<Action[]> => {
