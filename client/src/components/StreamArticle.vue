@@ -46,14 +46,9 @@
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     background-color: #f9f9f9;
     overflow: hidden;
-    scroll-snap-align: start;
-
-    &:last-child {
-        margin-bottom: 50px;
-        scroll-snap-align: end;
-    }
+    scroll-snap-align: start end;
 }
 </style>

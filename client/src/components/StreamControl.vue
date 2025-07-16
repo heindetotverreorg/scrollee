@@ -56,8 +56,12 @@
     }
 
     .stream-list {
-        height: calc(100% - 80px);
+        height: calc(100% - 83px);
         overflow: auto;
         scroll-snap-type: y mandatory;
+    }
+
+    h3 {
+        margin: 0;
     }
 </style>
