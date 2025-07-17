@@ -3,15 +3,18 @@
         <button @click="chooseStream = true">Add stream</button>
         <div v-if="chooseStream">
             <select v-model="selectedStream">
-            <option v-for="stream of presetStreamsList" :key="stream" :value="stream">
-                {{ stream }}
-            </option>
-        </select>
-        <button @click="addStream(selectedStream)">Add stream</button>
+                <option v-for="stream of presetStreamsList" :key="stream" :value="stream">
+                    {{ stream }}
+                </option>
+            </select>
+            <button @click="addStream(selectedStream)">Add stream</button>
         </div>
     </div>
     <div class="streams">
-        <StreamControl v-for="stream of streams" :stream-name="stream">
+        <StreamControl 
+            v-for="stream of streams" 
+            :stream-name="stream" 
+        >
             <div>
                 <button @click="removeStream(stream)">Remove stream</button>
             </div>

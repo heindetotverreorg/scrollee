@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts" setup>
-    import { toRefs, watch } from 'vue'
+    import { toRefs } from 'vue'
     import { ArticleData } from '@shared/types'
     import { useArticleMapping } from '@/composables/useArticleMapping'
     import StreamImage from './StreamImage.vue';
@@ -26,10 +26,6 @@
     }>()
 
     const { article, streamRootUrl } = toRefs(props)
-
-    watch(article, (newArticle) => {
-        console.log('Article updated:', newArticle)
-    }, { immediate: true })
 
     const {
         hasMeaningfulContent, 

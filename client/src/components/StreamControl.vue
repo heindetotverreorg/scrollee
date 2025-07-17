@@ -25,13 +25,15 @@
     </section>
 </template>
 <script setup lang="ts">
+    import { computed, unref } from 'vue'
     import { REQUEST_TYPES } from '@shared/constants'
-    import { StreamStatus, WebSocketStatus } from '@shared/types'
+    import { ArticleData, StreamStatus, WebSocketStatus } from '@shared/types'
     import StreamList from '@/components/StreamList.vue'
     import { useStreamControl } from '@/composables/useStreamControl'
 
     const { streamName } = defineProps<{
-        streamName: string
+        streamName: string,
+        isBundled?: boolean
     }>()
 
     const {
@@ -42,10 +44,7 @@
         webSocketStatus,
         sendMessage,
         onOpen
-     } = useStreamControl(
-        streamName
-     )
-
+     } = useStreamControl(streamName)
 
 </script>
 <style scoped lang="scss">
