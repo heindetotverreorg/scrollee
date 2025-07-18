@@ -3,22 +3,25 @@
         v-for="article, index in streamData"
         :key="`${streamId}_${index}`" 
         :article="article"
-        :stream-root-url="streamRootUrl"
     />
 </template>
 
 <script lang="ts" setup>
-    import { toRefs } from 'vue'
-    import { ArticleData } from '@shared/types'
+    import { computed, toRefs, unref } from 'vue'
     import StreamArticle from '@/components/StreamArticle.vue';
+    import { useStreamStore } from '@/store/streamStore'
 
     const props = defineProps<{
-        streamData: ArticleData[],
-        streamId: string,
-        streamRootUrl: string
+        streamName: string,
+        streamId: string
     }>()
 
-    const { streamData, streamId, streamRootUrl } = toRefs(props)
+    const { streamName, streamId } = toRefs(props)
+
+    const { getStreamsByName } = useStreamStore()
+
+    const streamData = computed(() => getStreamsByName(unref(streamName)))
+
 </script>
 
 <style scoped>

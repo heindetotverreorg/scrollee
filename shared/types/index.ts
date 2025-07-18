@@ -74,6 +74,7 @@ interface ArticleData {
     date?: string;
     createdAt: string;
     streamName?: string;
+    streamRootUrl?: string
 }
 
 enum StreamStatus {

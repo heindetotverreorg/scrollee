@@ -3,6 +3,7 @@ import { useWebSocket } from '@vueuse/core'
 import { Stream, StreamResponse, StreamStatus, ArticleData } from '@shared/types'
 import { presetStreams } from '@shared/models/streams'
 import { REQUEST_TYPES } from '@shared/constants'
+import { useStreamStore } from '@/store/streamStore'
 
 export function useStreamControl(
     streamName : string
@@ -21,7 +22,8 @@ export function useStreamControl(
         immediate: false
     })
 
-    const streamData = ref([] as ArticleData[])
+    const { setStreamArticles } = useStreamStore()
+
     const streamStatus = ref('' as StreamStatus)
     const streamError = ref('')
     const clientId = ref('')
@@ -61,7 +63,7 @@ export function useStreamControl(
             if (incomingStreamData) {
                 const parsedStreamData = JSON.parse(incomingStreamData) as ArticleData[]
 
-                streamData.value = parsedStreamData
+                setStreamArticles(parsedStreamData, unref(streamRootUrl), streamName)
             }
             if (incomingStreamStatus) {
                 streamStatus.value = incomingStreamStatus
@@ -96,7 +98,6 @@ export function useStreamControl(
     return {
         webSocketStatus,
         streamRootUrl,
-        streamData,
         streamStatus,
         streamError,
         clientId,

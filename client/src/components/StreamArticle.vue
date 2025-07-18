@@ -9,7 +9,7 @@
             :images="images"
         />
         <template v-if="text">
-            {{ text }}
+            <div>{{ text }}</div>
         </template>
     </div>
 </template>
@@ -21,11 +21,10 @@
     import StreamImage from './StreamImage.vue';
 
     const props = defineProps<{
-        article: ArticleData,
-        streamRootUrl: string
+        article: ArticleData
     }>()
 
-    const { article, streamRootUrl } = toRefs(props)
+    const { article } = toRefs(props)
 
     const {
         hasMeaningfulContent, 
@@ -34,7 +33,7 @@
         images,
         url,
         createdAt
-    } = useArticleMapping(article, streamRootUrl)
+    } = useArticleMapping(article)
 </script>
 
 <style scoped>
@@ -46,5 +45,9 @@
     background-color: #f9f9f9;
     overflow: hidden;
     scroll-snap-align: start end;
+
+    a {
+        display: inline-block;
+    }
 }
 </style>

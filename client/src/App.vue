@@ -9,29 +9,44 @@
             </select>
             <button @click="addStream(selectedStream)">Add stream</button>
         </div>
+        <div v-if="activeStreams.length">
+            <input 
+                type="checkbox"
+                id="bundle-streams"
+                v-model="isBundled"
+            >
+            <label for="bundle-streams">Bundle streams</label>
+        </div>
     </div>
-    <div class="streams">
+    <div :class="`streams ${isBundled ? 'streams--bundled' : ''}`">
         <StreamControl 
-            v-for="stream of streams" 
+            v-for="stream, index of activeStreams" 
+            :key="`${stream}_${index}`"
             :stream-name="stream" 
+            :is-bundled="isBundled"
         >
             <div>
                 <button @click="removeStream(stream)">Remove stream</button>
             </div>
         </StreamControl>
     </div>
+    <div v-if="isBundled">
+        <BundledStreams />
+    </div>
 </template>
 <script setup lang="ts">
     import StreamControl from '@/components/StreamControl.vue'
+    import BundledStreams from '@/components/BundledStreams.vue'
     import { onMounted, ref, Ref, unref } from 'vue'
     import { presetStreams } from '@shared/models/streams'
   
     const chooseStream = ref(false)
+    const isBundled = ref(false)
     const selectedStream = ref('')
-    const streams : Ref<string[]> = ref([])
+    const activeStreams : Ref<string[]> = ref([])
 
     onMounted(() => {
-        streams.value = localStorage.getItem('streams') 
+        activeStreams.value = localStorage.getItem('streams') 
             ? JSON.parse(localStorage.getItem('streams') || '[]') 
             : []
     })
@@ -41,16 +56,16 @@
     }) 
   
     const addStream = (streamName : string) => {
-        streams.value.push(streamName)
+        activeStreams.value.push(streamName)
         selectedStream.value = ''
         chooseStream.value = false
 
-        localStorage.setItem('streams', JSON.stringify(unref(streams)));
+        localStorage.setItem('streams', JSON.stringify(unref(activeStreams)));
     }
   
     const removeStream = (streamName : string) => {
-        streams.value = streams.value.filter(stream => stream !== streamName)
-        localStorage.setItem('streams', JSON.stringify(unref(streams)));
+        activeStreams.value = activeStreams.value.filter(stream => stream !== streamName)
+        localStorage.setItem('streams', JSON.stringify(unref(activeStreams)));
     }
 </script>
 <style scoped lang="scss">
@@ -65,6 +80,10 @@
         overflow-x: auto;
         overflow-y: hidden;
         scroll-snap-type: x mandatory;
+
+        &--bundled {
+            height: auto;
+        }
     }
 </style>
 <style lang="scss">
