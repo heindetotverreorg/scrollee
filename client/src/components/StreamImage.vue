@@ -23,9 +23,14 @@
 <style scoped>
 .stream-image {
     max-width: 100%;
+    width: 100%;
     height: auto;
     margin: 10px 0;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    @media screen and (min-width: 400px) {
+        /* width: auto; */
+    }
 }
 </style>

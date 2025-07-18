@@ -2,15 +2,14 @@ import { ArticleData } from '@shared/types'
 import { computed, unref, Ref } from 'vue'
 
 export function useArticleMapping(
-    article : Ref<ArticleData>,
-    streamRootUrl : Ref<string>
+    article : Ref<ArticleData>
 ) {
     const hasMeaningfulContent = computed(() => unref(article).text.length > 40)
     const title = computed(() => getTitleFromArticle(unref(article)) || unref(article).title)
     const text = computed(() => unref(article).text || '')
     const images = computed(() => getImagesFromHtml(unref(article).html) || unref(article).image || '')
     const date = computed(() => new Date(unref(article).date as string).toLocaleDateString())
-    const url = computed(() => getArticleUrlFromHtml(unref(article).html, unref(streamRootUrl)) || unref(article).href || '')
+    const url = computed(() => getArticleUrlFromHtml(unref(article).html, unref(article).streamRootUrl as string) || unref(article).href || '')
     const createdAt = computed(() => unref(article).createdAt || new Date().toISOString())
 
     return {
