@@ -4,7 +4,7 @@ import { computed, unref, Ref } from 'vue'
 export function useArticleMapping(
     article : Ref<ArticleData>
 ) {
-    const hasMeaningfulContent = computed(() => unref(article).text.length > 100)
+    const hasMeaningfulContent = computed(() => unref(article).text.length > 80)
     const title = computed(() => getTitleFromArticle(unref(article)) || unref(article).title)
     const text = computed(() => unref(article).text || '')
     const images = computed(() => getImagesFromHtml(unref(article).html) || unref(article).image || '')

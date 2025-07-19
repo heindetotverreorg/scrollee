@@ -9,23 +9,20 @@ export const useStreamStore = defineStore('stream', () => {
 
     // getters
     const getBundledStreams = computed(() => {
+        // return unref(bundledStreams)
         const streamNames = [...new Set(unref(bundledStreams).map(article => article.streamName))]
         const result: ArticleData[] = []
-
-        for (const streamName of streamNames) {
-            const streamArticles = unref(bundledStreams).filter(article => article.streamName === streamName)
-            const randomArticle = streamArticles[Math.floor(Math.random() * streamArticles.length)]
-            if (randomArticle) {
-                result.push(randomArticle)
-            }
+        let currentIndex = 0
+        
+        while (result.length < unref(bundledStreams).length) {
+            const currentStreamName = streamNames[currentIndex]
+            const article = unref(bundledStreams).find(
+                a => a.streamName === currentStreamName && !result.includes(a)
+            )
+            if (article) result.push(article)
+            currentIndex = (currentIndex + 1) % streamNames.length
         }
-
-        // Shuffle the result array to ensure random stream order
-        for (let i = result.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [result[i], result[j]] = [result[j], result[i]]
-        }
-
+        
         return result
     })
 
