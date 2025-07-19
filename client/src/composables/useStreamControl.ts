@@ -49,6 +49,9 @@ export function useStreamControl(
         if (newWebSocketStatus === 'OPEN') {
             sendMessage(REQUEST_TYPES.CONNECT)
         }
+        if (newWebSocketStatus === 'CLOSED' && streamStatus.value === StreamStatus.SUCCESS) {
+            open()
+        }
     })
 
     watch(data, (incomingStream) => {

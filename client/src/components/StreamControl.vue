@@ -6,7 +6,6 @@
             <button @click="onOpen">Open {{ streamName }}</button>
         </div>
         <div v-else>
-            <slot />
             <div v-if="streamStatus === StreamStatus.DISCONNECTED">
                 <button @click="sendMessage(REQUEST_TYPES.CONNECT)">Connect {{ streamName }}</button>
             </div>
@@ -14,6 +13,7 @@
                 <button @click="sendMessage(REQUEST_TYPES.FETCH)">Receive data</button>
             </div>
         </div>
+        <slot />
         <div v-if="!isBundled" class="stream-list">
             <StreamList
                 v-if="streamStatus"
