@@ -1,6 +1,16 @@
 <template>
     <div class="stream-setup">
-        <button @click="chooseStream = true">Add stream</button>
+        <div>
+            <button @click="chooseStream = true">Add stream</button>
+            <span>
+                <input 
+                    type="checkbox"
+                    id="bundle-streams"
+                    v-model="isBundled"
+                >
+                <label for="bundle-streams">Bundle streams</label>
+            </span>
+        </div>
         <div v-if="chooseStream">
             <select v-model="selectedStream">
                 <option v-for="stream of presetStreamsList" :key="stream" :value="stream">
@@ -9,19 +19,12 @@
             </select>
             <button @click="addStream(selectedStream)">Add stream</button>
         </div>
-        <div v-if="activeStreams.length">
-            <input 
-                type="checkbox"
-                id="bundle-streams"
-                v-model="isBundled"
-            >
-            <label for="bundle-streams">Bundle streams</label>
-        </div>
     </div>
+    
     <div :class="`streams ${isBundled ? 'streams--bundled' : ''}`">
         <StreamControl 
-            v-for="stream, index of activeStreams" 
-            :key="`${stream}_${index}`"
+            v-for="stream of activeStreams" 
+            :key="stream"
             :stream-name="stream" 
             :is-bundled="isBundled"
         >

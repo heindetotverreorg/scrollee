@@ -16,6 +16,26 @@
 
     const imageSrcs = computed(() => {
         return images.filter((image: HTMLImageElement) => {
+            if (image.src.includes('data:')) {
+                return false // Skip data URIs
+            }
+
+            if (image.width && image.width < 100) {
+                return false // Skip very small images
+            }
+
+            if(image.src.includes('blur=')) {
+                return false // Skip images with blur effect
+            }
+
+            if (image.src.includes('crop=')) {
+                return false // Skip images with crop effect
+            }
+
+            if (image.src.includes('emoji')) {
+                return false // Skip emojis
+            }
+
             return image.src
         })
     })

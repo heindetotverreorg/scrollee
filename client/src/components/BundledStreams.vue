@@ -9,9 +9,11 @@
 </template>
 <script setup lang="ts">
 import { useStreamStore } from '@/store/streamStore'
+import { storeToRefs } from 'pinia'
 import StreamArticle from '@/components/StreamArticle.vue'
 
-const { getBundledStreams } = useStreamStore()
+const store = useStreamStore()
+const { getBundledStreams } = storeToRefs(store)
 </script>
 <style scoped lang="scss">
     .bundled-streams {
