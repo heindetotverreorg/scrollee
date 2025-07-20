@@ -22,55 +22,9 @@ const puppeteerConnectionController = {
             hasCookieBanner
         } = config as StreamConfig;
 
-        // Add optimization flags for faster browser launch
-        const optimization_args = [
-            '--autoplay-policy=user-gesture-required',
-            '--disable-background-networking',
-            '--disable-background-timer-throttling',
-            '--disable-backgrounding-occluded-windows',
-            '--disable-breakpad',
-            '--disable-client-side-phishing-detection',
-            '--disable-component-update',
-            '--disable-default-apps',
-            '--disable-domain-reliability',
-            '--disable-extensions',
-            '--disable-features=TranslateUI',
-            '--disable-hang-monitor',
-            '--disable-ipc-flooding-protection',
-            '--disable-notifications',
-            '--disable-offer-store-unmasked-wallet-cards',
-            '--disable-popup-blocking',
-            '--disable-print-preview',
-            '--disable-prompt',
-            '--disable-sync',
-            '--hide-scrollbars',
-            '--metrics-recording-only',
-            '--mute-audio',
-            '--no-default-browser-check',
-            '--no-first-run',
-            '--no-pings',
-            '--no-zygote',
-            '--password-store=basic',
-            '--use-mock-keychain',
-            '--disable-blink-features=AutomationControlled',
-            '--disable-web-security',
-            '--disable-infobars',
-            '--window-size=1920,1080',
-            '--disable-accelerated-2d-canvas',
-            '--disable-webgl',
-            '--disable-3d-apis',
-            '--disable-site-isolation-trials',
-            '--disable-features=IsolateOrigins,site-per-process',
-            '--disable-remote-fonts',
-            '--disable-logging',
-            '--disable-permissions-api',
-            '--ignore-certificate-errors'
-        ];
-
         const browser = await puppeteer.launch({
             headless: process.env.NODE_ENV === 'production',
             args: [
-                ...optimization_args,
                 '--no-sandbox', 
                 '--disable-setuid-sandbox',
                 '--disable-gpu',
