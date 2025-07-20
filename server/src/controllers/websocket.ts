@@ -18,10 +18,13 @@ const wsController = {
 
                 try {
                     if (requestType === REQUEST_TYPES.CONNECT) {
+                        garbageCollection(connections);
                         await connectToStream({ ws, data, connections, clientId });
                     }
 
                     if (requestType === REQUEST_TYPES.FETCH) {
+                        // Update last activity timestamp
+                        connections[clientId].lastActivity = Date.now();
                         // set the payload data to the connection
                         connections[clientId].data = data as string;
                         await fetchFromStream({ ws, data, connections, clientId });
@@ -44,6 +47,7 @@ const wsController = {
                 // clearInterval(fetchInterval);
                 ws.close();
             });
+
 
             // timer based fetching
             // const fetchInterval = setInterval(async () => {
@@ -109,3 +113,14 @@ const makeMessage = (state: StreamStatus, clientId?: string,  data?: string, err
         clientId
     } as StreamResponse)
 }
+
+// Garbage collection for inactive clients (5 minutes timeout)
+const garbageCollection = (connections: StreamConnections) => {
+    const now = Date.now();
+    Object.keys(connections).forEach(id => {
+        if (!connections[id].lastActivity || now - connections[id].lastActivity > 300000) {
+            console.log('Cleaning up inactive client: ' + id);
+            closeStream({ connections, clientId: id });
+        }
+    });
+};

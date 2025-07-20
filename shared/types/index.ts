@@ -27,6 +27,7 @@ interface StreamConnections {
         browser?: Browser;
         page?: Page;
         data?: string;
+        lastActivity?: number; // Timestamp of the last activity
     };
 }
 interface Stream {
