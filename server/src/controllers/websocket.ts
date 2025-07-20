@@ -11,7 +11,7 @@ const wsController = {
         
         wss.on('connection', (ws: WebSocket) => {
             const clientId = Math.random().toString(36).substring(2, 15);
-            console.log('Client connected: ' + clientId);
+            console.log('-- Client connected: ' + clientId);
 
             ws.on('message', async (data: WebSocket.Data) => {
                 const { requestType } = JSON.parse(data as string);
@@ -102,7 +102,8 @@ const closeStream = async ({ connections, clientId } : StreamConnectionsPayload)
     }
 
     delete connections[clientId];
-    console.log('Client emoved');
+    console.log('-- Client removed');
+    console.log('all clients: ' + Object.keys(connections));
 }
 
 const makeMessage = (state: StreamStatus, clientId?: string,  data?: string, error?: string) => {
