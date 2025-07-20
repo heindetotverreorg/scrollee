@@ -87,8 +87,8 @@ const fetchFromStream = async ({ ws, data, connections, clientId } : StreamConne
 }
 
 const closeStream = async ({ connections, clientId } : StreamConnectionsPayload) => {
-    console.log('client to close: ' + clientId);
     console.log('all clients: ' + Object.keys(connections));
+    console.log('client to close: ' + clientId);
     if (!connections[clientId]) {
         console.log('No connection found for client: ' + clientId);
         console.log('Client connection never established');
