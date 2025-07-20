@@ -118,7 +118,7 @@ const makeMessage = (state: StreamStatus, clientId?: string,  data?: string, err
 const garbageCollection = (connections: StreamConnections) => {
     const now = Date.now();
     Object.keys(connections).forEach(id => {
-        if (!connections[id].lastActivity || now - connections[id].lastActivity > 300000) {
+        if (!connections[id]?.lastActivity || (now - (connections[id]?.lastActivity || 0) > 300000)) {
             console.log('Cleaning up inactive client: ' + id);
             closeStream({ connections, clientId: id });
         }
