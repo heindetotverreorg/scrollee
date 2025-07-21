@@ -17,7 +17,8 @@ const wsController = {
                 const { requestType } = JSON.parse(data as string);
 
                 try {
-                    if (requestType === REQUEST_TYPES.CONNECT) {
+                    // reconnect if connection was lost
+                    if (requestType === REQUEST_TYPES.CONNECT || !connections[clientId]) {
                         garbageCollection(connections);
                         await connectToStream({ ws, data, connections, clientId });
                     }
@@ -36,7 +37,7 @@ const wsController = {
             });
 
             ws.on('close', () => {
-                // clearInterval(fetchInterval);
+                clearInterval(fetchInterval);
                 closeStream({ connections, clientId });
             });
 
@@ -44,19 +45,18 @@ const wsController = {
                 console.error('WebSocket error:', error);
                 ws.send(makeMessage(StreamStatus.ERROR, clientId, undefined, error.message));
                 
-                // clearInterval(fetchInterval);
+                clearInterval(fetchInterval);
                 ws.close();
             });
 
-
             // timer based fetching
-            // const fetchInterval = setInterval(async () => {
-            //     if (connections[clientId]) {
-            //         console.log('-- Interval based: ' + clientId + '. Fetching data from stream');
-            //         const data = connections[clientId].data;
-            //         await fetchFromStream({ ws, data, connections, clientId });
-            //     }
-            // }, 30000);
+            const fetchInterval = setInterval(async () => {
+                if (connections[clientId]) {
+                    console.log('-- Interval based: ' + clientId + '. Fetching data from stream');
+                    const data = connections[clientId].data;
+                    await fetchFromStream({ ws, data, connections, clientId });
+                }
+            }, 30000);
         });
     }
 }
@@ -87,7 +87,6 @@ const fetchFromStream = async ({ ws, data, connections, clientId } : StreamConne
 }
 
 const closeStream = async ({ connections, clientId } : StreamConnectionsPayload) => {
-    console.log('all clients: ' + Object.keys(connections));
     console.log('client to close: ' + clientId);
     if (!connections[clientId]) {
         console.log('No connection found for client: ' + clientId);
