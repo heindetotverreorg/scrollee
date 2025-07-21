@@ -49,6 +49,8 @@ const wsController = {
                 ws.close();
             });
 
+            const twoMinutesInMs = 1200000;
+
             // timer based fetching
             const fetchInterval = setInterval(async () => {
                 if (ws.OPEN && connections[clientId]) {
@@ -56,7 +58,7 @@ const wsController = {
                     const data = connections[clientId].data;
                     await fetchFromStream({ ws, data, connections, clientId });
                 }
-            }, 30000);
+            }, twoMinutesInMs);
         });
     }
 }
