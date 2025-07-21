@@ -51,7 +51,7 @@ const wsController = {
 
             // timer based fetching
             const fetchInterval = setInterval(async () => {
-                if (connections[clientId]) {
+                if (ws.OPEN && connections[clientId]) {
                     console.log('-- Interval based: ' + clientId + '. Fetching data from stream');
                     const data = connections[clientId].data;
                     await fetchFromStream({ ws, data, connections, clientId });
