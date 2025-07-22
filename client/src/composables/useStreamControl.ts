@@ -8,12 +8,10 @@ import { useStreamStore } from '@/store/streamStore'
 export function useStreamControl(
     streamName : string
 ) {
-    const wsPath = import.meta.env.VITE_WS_PATH || '127.0.0.1:3002'
+    const wsPath = import.meta.env.VITE_WS_PATH || 'scrollee.heindetotverre.com'
     const isServer = window.location.protocol === 'https:'
     const protocol = isServer ? 'wss' : 'ws'
     const fullPath = `${protocol}://${wsPath}/ws`
-
-    console.log('VITE_WS_PATH:', import.meta.env.VITE_WS_PATH)
 
     const {
         status: webSocketStatus, 
