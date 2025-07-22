@@ -28,7 +28,8 @@ const puppeteerConnectionController = {
                 '--no-sandbox', 
                 '--disable-setuid-sandbox',
                 '--disable-gpu',
-                '--disable-dev-shm-usage'
+                '--disable-dev-shm-usage',
+                '--no-zygote'
             ],
             env: {
                 DISPLAY: ":10.0"

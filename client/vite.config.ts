@@ -23,5 +23,6 @@ export default ({ mode }) => {
       outDir: '../dist/client',
     },
     root: './client',
+    envDir: '../',
   });
 };

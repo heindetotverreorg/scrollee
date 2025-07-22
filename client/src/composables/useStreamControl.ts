@@ -13,6 +13,8 @@ export function useStreamControl(
     const protocol = isServer ? 'wss' : 'ws'
     const fullPath = `${protocol}://${wsPath}/ws`
 
+    console.log('VITE_WS_PATH:', import.meta.env.VITE_WS_PATH)
+
     const {
         status: webSocketStatus, 
         data, 
