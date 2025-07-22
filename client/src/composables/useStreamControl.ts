@@ -8,7 +8,7 @@ import { useStreamStore } from '@/store/streamStore'
 export function useStreamControl(
     streamName : string
 ) {
-    const wsPath = import.meta.env.VITE_WS_PATH || 'scrollee.heindetotverre.com'
+    const wsPath = import.meta.env.VITE_WS_PATH || '127.0.0.1:3002'
     const isServer = window.location.protocol === 'https:'
     const protocol = isServer ? 'wss' : 'ws'
     const fullPath = `${protocol}://${wsPath}/ws`
