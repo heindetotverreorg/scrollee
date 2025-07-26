@@ -1,14 +1,14 @@
 import express from 'express';
-import 'dotenv/config'
+import { serverConfig } from '@shared/env/config'
 import WebSocket from 'ws';
 import http from 'http';
 import { setRoutes } from './routes/index';
 import { wsController } from './controllers/websocket';
 
 const app = express();
-const S_PORT = process.env.VITE_S_PORT;
-const WS_PORT = process.env.VITE_WS_PORT;
-const host = process.env.VITE_WS_HOST;
+const S_PORT = serverConfig.serverPort;
+const WS_PORT = serverConfig.wsPort;
+const host = serverConfig.wsHost;
 
 // Middleware
 app.use(express.json());

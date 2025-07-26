@@ -3,13 +3,11 @@ services:
     platform: linux/arm64
     image: heindetotverre/scrollee:latest
     restart: unless-stopped
+    env_file:
+      - shared/env/.env.production
     environment:
       - PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
       - PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
-      - VITE_S_PORT=3001
-      - VITE_WS_PORT=3002
-      - VITE_WS_HOST=0.0.0.0
-      - VITE_WS_PATH=scrollee.heindetotverre.com
       - NODE_ENV=production
     ports:
       - "0.0.0.0:3001:3001"
