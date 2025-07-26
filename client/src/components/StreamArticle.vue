@@ -1,5 +1,5 @@
 <template>
-    <div v-if="hasMeaningfulContent" class="stream-article">
+    <div v-if="hasMeaningfulContent" class="article">
         {{ createdAt }}
         <a v-if="url" :href="url" target="_blank" rel="noopener noreferrer">
             {{ title }}
@@ -37,7 +37,7 @@
 </script>
 
 <style scoped>
-.stream-article {
+.article {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;

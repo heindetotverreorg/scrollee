@@ -1,5 +1,5 @@
 <template>
-    <section class="stream-wrapper">
+    <section class="stream-controls-wrapper">
         <h3>{{ streamName }}</h3>
         status: {{ streamStatus || webSocketStatus.toLowerCase() }}
         <div v-if="webSocketStatus === WebSocketStatus.CLOSED">
@@ -14,13 +14,13 @@
             </div>
         </div>
         <slot />
-        <div v-if="!isBundled" class="stream-list">
+        <!-- <div v-if="!isBundled" class="stream-list">
             <StreamList
                 v-if="streamStatus"
                 :stream-name="streamName"
                 :stream-id="clientId"    
             />
-        </div>
+        </div> -->
     </section>
 </template>
 <script setup lang="ts">
@@ -38,7 +38,6 @@
 
     const {
         streamStatus,
-        clientId,
         webSocketStatus,
         sendMessage,
         onOpen
@@ -51,24 +50,13 @@
 
 </script>
 <style scoped lang="scss">
-    .stream-wrapper {
-        min-width: 250px;
-        width: 250px;
-        scroll-snap-align: start;
-    }
-
-    .stream-list {
-        height: calc(100% - 83px);
-        overflow: auto;
-        scroll-snap-type: y mandatory;
-
-        &--bundled {
-            height: auto;
-            overflow: hidden;
-        }
-    }
-
     h3 {
         margin: 0;
+    }
+
+    .stream-controls-wrapper {
+        min-width: 250px;
+        scroll-snap-align: start;
+        width: 250px;
     }
 </style>

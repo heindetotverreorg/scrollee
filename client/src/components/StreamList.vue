@@ -1,9 +1,12 @@
 <template>
-    <StreamArticle
-        v-for="article, index in streamData"
-        :key="`${streamId}_${index}`" 
-        :article="article"
-    />
+    <div class="articles-list">
+        <h3 class="articles-list-title">{{ streamName }}</h3>
+        <StreamArticle
+            v-for="article, index in streamData"
+            :key="`${streamName}_${index}`" 
+            :article="article"
+        />
+    </div>
 </template>
 
 <script lang="ts" setup>
@@ -12,11 +15,10 @@
     import { useStreamStore } from '@/store/streamStore'
 
     const props = defineProps<{
-        streamName: string,
-        streamId: string
+        streamName: string
     }>()
 
-    const { streamName, streamId } = toRefs(props)
+    const { streamName } = toRefs(props)
 
     const { getStreamsByName } = useStreamStore()
 
@@ -25,4 +27,11 @@
 </script>
 
 <style scoped>
+    .articles-list {
+        min-width: 250px;
+        width: 250px;
+        scroll-snap-align: start;
+        overflow: auto;
+        scroll-snap-type: y mandatory;
+    }
 </style>
