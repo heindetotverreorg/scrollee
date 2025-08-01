@@ -1,22 +1,28 @@
 <template>
     <section class="articles-list-wrapper">
-        <div class="articles-list-header">
-           <h3 class="articles-list-title">{{ streamName }}</h3>
-        </div>
-        <div class="articles-list">
-            <StreamArticle
-                v-for="article, index in streamData"
-                :key="`${streamName}_${index}`" 
-                :article="article"
-            />
-        </div>
+        <Loader v-if="isLoadingFirstTime" />
+        <template v-else>
+             <div class="articles-list-header">
+                <h3 class="articles-list-title">{{ streamName }}</h3>
+            </div>
+            <div class="articles-list">
+                <StreamArticle
+                    v-for="article, index in streamData"
+                    :key="`${streamName}_${index}`" 
+                    :article="article"
+                />
+            </div>
+        </template>
     </section>
 </template>
 
 <script lang="ts" setup>
-    import { computed, toRefs, unref } from 'vue'
+    import { computed, toRefs, unref, ref } from 'vue'
     import StreamArticle from '@/components/StreamArticles/StreamArticle.vue';
     import { useStreamStore } from '@/store/streamStore'
+    import { useStreamControl } from '@/composables/useStreamControl';
+    import Loader from '@/components/Loader.vue';
+    import { StreamStatus } from '@shared/types';
 
     const props = defineProps<{
         streamName: string
@@ -25,6 +31,12 @@
     const { streamName } = toRefs(props)
 
     const { getStreamsByName } = useStreamStore()
+    const { streamStatus } = useStreamControl(unref(streamName))
+
+    const isLoadingFirstTime = computed(() => {
+        return unref(streamStatus) !== StreamStatus.SUCCESS
+            && !unref(streamData).length
+    })
 
     const streamData = computed(() => getStreamsByName(unref(streamName)))
 
