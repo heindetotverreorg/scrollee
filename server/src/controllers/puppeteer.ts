@@ -3,9 +3,10 @@ import { Page, KnownDevices } from 'puppeteer';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import WebSocket from 'ws';
 import { Stream, StreamConfig, Selectors, Action, StreamResponse, StreamStatus } from '@shared/types';
+import { makeMessage } from '@/utils/make-message';
 
 const puppeteerConnectionController = {
-    handlePuppeteerConnection: async (data: WebSocket.Data) => {
+    handlePuppeteerConnection: async (data: WebSocket.Data, ws: WebSocket, clientId: string) => {
         puppeteer.use(StealthPlugin());
 
         const {
@@ -48,11 +49,13 @@ const puppeteerConnectionController = {
 
         if (hasCookieBanner) {
             console.log(`${stream.name} -- Cookie banner detected`);
+            ws.send(makeMessage(StreamStatus.HANDLING_COOKIE_BANNER, clientId));
             await puppeteerRequestController.handleCookieBanner(config as StreamConfig, page)
         }
 
         if (useLogin) {
             console.log(`${stream.name} -- Login detected`);
+            ws.send(makeMessage(StreamStatus.LOGGING_IN, clientId));
             await puppeteerRequestController.handleAuthenticate(config as StreamConfig, page)
         }
 

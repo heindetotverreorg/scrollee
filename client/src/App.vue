@@ -1,33 +1,9 @@
 <template>
-    <div class="stream-setup">
-        <div>
-            <button @click="chooseStream = true">Add stream</button>
-            <span>
-                <input 
-                    type="checkbox"
-                    id="bundle-streams"
-                    v-model="isBundled"
-                >
-                <label for="bundle-streams">Bundle streams</label>
-            </span>
-        </div>
-        <div v-if="chooseStream" class="stream-setup-select">
-            <select v-model="selectedStream">
-                <option v-for="stream of presetStreamsList" :key="stream" :value="stream">
-                    {{ stream }}
-                </option>
-            </select>
-            <button @click="addStream(selectedStream)">Add stream</button>
-        </div>
-        <div>
-            <input 
-                type="checkbox"
-                id="show-controls"
-                v-model="showControls"
-            >
-            <label for="show-controls">Show controls</label>
-        </div>
-    </div>
+    <StreamSetup
+        @on-handle-is-bundled="isBundled = $event"
+        @on-handle-show-controls="showControls = $event"
+        @on-handle-add-stream="addStream"
+    />
     
     <section
         v-show="showControls"
@@ -59,11 +35,11 @@
     </section>
 </template>
 <script setup lang="ts">
-    import StreamControl from '@/components/StreamControl.vue'
-    import StreamList from './components/StreamList.vue'
-    import BundledStreams from '@/components/BundledStreams.vue'
+    import StreamSetup from '@/components/StreamSetup.vue'
+    import StreamControl from '@/components/StreamsView/StreamControl.vue'
+    import StreamList from './components/StreamsView/StreamList.vue'
+    import BundledStreams from '@/components/StreamsView/BundledStreams.vue'
     import { onMounted, ref, Ref, unref } from 'vue'
-    import { presetStreams } from '@shared/models/streams'
   
     const chooseStream = ref(false)
     const isBundled = ref(false)
@@ -76,10 +52,6 @@
             ? JSON.parse(localStorage.getItem('streams') || '[]') 
             : []
     })
-
-    const presetStreamsList = presetStreams.map((stream : any) => {
-        return stream.name
-    }) 
   
     const addStream = (streamName : string) => {
         activeStreams.value.push(streamName)
@@ -95,18 +67,6 @@
     }
 </script>
 <style scoped lang="scss">
-    .stream-setup {
-        display: flex;
-        height: 50px;
-        position: relative;
-    }
-
-    .stream-setup-select {
-        position: absolute;
-        top: 25px;
-        left: 0;
-    }
-
     .streams-content {
         height: calc(100vh - 135px);
         overflow: hidden;
@@ -137,6 +97,10 @@
     }
 </style>
 <style lang="scss">
+    * {
+        box-sizing: border-box;
+    }
+    
     body {
         margin-top: 0;
         margin-bottom: 0;

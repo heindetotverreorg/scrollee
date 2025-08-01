@@ -2,8 +2,8 @@ import WebSocket, { WebSocketServer } from 'ws';
 import { puppeteerRequestController, puppeteerConnectionController } from './puppeteer'; 
 import { Page } from 'puppeteer';
 import { REQUEST_TYPES } from '@shared/constants';
-import { StreamConnections, StreamConnectionsPayload, StreamResponse, StreamStatus } from '@shared/types';
-
+import { StreamConnections, StreamConnectionsPayload, StreamStatus } from '@shared/types';
+import { makeMessage } from '@/utils/make-message';
 
 const wsController = {
     handleWebSocket: (wss : WebSocketServer) => {
@@ -68,7 +68,7 @@ export { wsController }
 const connectToStream = async ({ ws, data, connections, clientId } : StreamConnectionsPayload) => {
     ws?.send(makeMessage(StreamStatus.CONNECTING, clientId));
 
-    const { browser, page } = await puppeteerConnectionController.handlePuppeteerConnection(data as string);
+    const { browser, page } = await puppeteerConnectionController.handlePuppeteerConnection(data as string, ws as WebSocket, clientId);
     if (!connections[clientId]) connections[clientId] = {};
     connections[clientId].browser = browser;
     connections[clientId].page = page;
@@ -83,7 +83,7 @@ const fetchFromStream = async ({ ws, data, connections, clientId } : StreamConne
         return;
     }
     const { page } = connections[clientId] as { page: Page };
-    ws?.send(makeMessage(StreamStatus.PENDING));
+    ws?.send(makeMessage(StreamStatus.FETCHING, clientId));
     const response = await puppeteerRequestController.handleFetchRequest(data as string, page);
     ws?.send(JSON.stringify(response));
 }
@@ -107,14 +107,6 @@ const closeStream = async ({ connections, clientId } : StreamConnectionsPayload)
     console.log('all clients: ' + Object.keys(connections));
 }
 
-const makeMessage = (state: StreamStatus, clientId?: string,  data?: string, error?: string) => {
-    return JSON.stringify({
-        streamData: data,
-        streamStatus: state,
-        error,
-        clientId
-    } as StreamResponse)
-}
 
 // Garbage collection for inactive clients (5 minutes timeout)
 const garbageCollection = (connections: StreamConnections) => {

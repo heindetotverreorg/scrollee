@@ -18,7 +18,7 @@
     import { toRefs } from 'vue'
     import { ArticleData } from '@shared/types'
     import { useArticleMapping } from '@/composables/useArticleMapping'
-    import StreamImage from './StreamImage.vue';
+    import StreamImage from '@/components/StreamArticles/StreamImage.vue';
 
     const props = defineProps<{
         article: ArticleData

@@ -81,7 +81,7 @@ interface ArticleData {
 enum StreamStatus {
     SUCCESS = 'success',
     ERROR = 'error',
-    PENDING = 'pending',
+    FETCHING = 'fetching',
     LOADING = 'loading',
     CONNECTING = 'connecting',
     DISCONNECTED = 'disconnected',
@@ -90,6 +90,8 @@ enum StreamStatus {
     CLOSED = 'closed',
     OPEN = 'open',
     READY = 'ready',
+    LOGGING_IN = 'logging_in',
+    HANDLING_COOKIE_BANNER = 'handling_cookie_banner',
 }
 
 enum WebSocketStatus {

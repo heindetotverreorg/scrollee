@@ -14,19 +14,11 @@
             </div>
         </div>
         <slot />
-        <!-- <div v-if="!isBundled" class="stream-list">
-            <StreamList
-                v-if="streamStatus"
-                :stream-name="streamName"
-                :stream-id="clientId"    
-            />
-        </div> -->
     </section>
 </template>
 <script setup lang="ts">
     import { REQUEST_TYPES } from '@shared/constants'
     import { StreamStatus, WebSocketStatus } from '@shared/types'
-    import StreamList from '@/components/StreamList.vue'
     import { useStreamControl } from '@/composables/useStreamControl'
     import { useStreamStore } from '@/store/streamStore'
     import { onUnmounted } from 'vue';
@@ -55,8 +47,6 @@
     }
 
     .stream-controls-wrapper {
-        min-width: 250px;
         scroll-snap-align: start;
-        width: 250px;
     }
 </style>

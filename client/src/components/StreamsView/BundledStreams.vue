@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import { useStreamStore } from '@/store/streamStore'
 import { storeToRefs } from 'pinia'
-import StreamArticle from '@/components/StreamArticle.vue'
+import StreamArticle from '@/components/StreamArticles/StreamArticle.vue'
 
 const store = useStreamStore()
 const { getBundledStreams } = storeToRefs(store)
