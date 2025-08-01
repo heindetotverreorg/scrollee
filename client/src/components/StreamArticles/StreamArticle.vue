@@ -1,5 +1,6 @@
 <template>
     <div v-if="hasMeaningfulContent" class="article">
+        <h4 v-if="isBundled">{{ article.streamName }}</h4>
         {{ createdAt }}
         <a v-if="url" :href="url" target="_blank" rel="noopener noreferrer">
             {{ title }}
@@ -21,10 +22,11 @@
     import StreamImage from '@/components/StreamArticles/StreamImage.vue';
 
     const props = defineProps<{
-        article: ArticleData
+        article: ArticleData,
+        isBundled?: boolean
     }>()
 
-    const { article } = toRefs(props)
+    const { article, isBundled } = toRefs(props)
 
     const {
         hasMeaningfulContent, 
@@ -48,6 +50,11 @@
 
     a {
         display: inline-block;
+    }
+
+    h4 {
+        margin: 0;
+        font-size: 1.2em;
     }
 }
 </style>

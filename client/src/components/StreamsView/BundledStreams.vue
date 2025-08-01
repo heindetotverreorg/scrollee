@@ -4,6 +4,7 @@
             v-for="article, index of getBundledStreams" 
             :key="`${article.title}_${index}`" 
             :article="article"
+            :is-bundled="true"
         />
     </div>
 </template>

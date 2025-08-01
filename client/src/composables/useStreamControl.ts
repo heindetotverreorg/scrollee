@@ -43,6 +43,9 @@ export function useStreamControl(
         if (newStreamStatus === StreamStatus.CONNECTED) {
             sendMessage(REQUEST_TYPES.FETCH)
         }
+        if (newStreamStatus === StreamStatus.ERROR) {
+            sendMessage(REQUEST_TYPES.CONNECT)
+        }
     })
 
     watch(webSocketStatus, (newWebSocketStatus) => {
