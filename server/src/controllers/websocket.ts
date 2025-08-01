@@ -49,7 +49,7 @@ const wsController = {
                 ws.close();
             });
 
-            const twoMinutesInMs = 1200000;
+            const twoMinutesInMs = 120000;
 
             // timer based fetching
             const fetchInterval = setInterval(async () => {

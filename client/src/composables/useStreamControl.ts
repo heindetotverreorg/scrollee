@@ -41,6 +41,7 @@ export function useStreamControl(
 
     watch(streamStatus, async (newStreamStatus) => {
         setStreamStatus(streamName, newStreamStatus)
+        
         if (newStreamStatus === StreamStatus.CONNECTED) {
             sendMessage(REQUEST_TYPES.FETCH)
         }

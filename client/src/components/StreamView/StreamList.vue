@@ -1,10 +1,10 @@
 <template>
     <section class="articles-list-wrapper">
+        <div class="articles-list-header">
+            <h3 class="articles-list-title">{{ streamName }} >> {{ streamStatus }}</h3>
+        </div>
         <Loader v-if="isLoadingFirstTime" />
         <template v-else>
-             <div class="articles-list-header">
-                <h3 class="articles-list-title">{{ streamName }} >> {{ streamStatus }}</h3>
-            </div>
             <div class="articles-list">
                 <StreamArticle
                     v-for="article, index in streamData"
