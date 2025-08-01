@@ -105,4 +105,9 @@
         margin-top: 0;
         margin-bottom: 0;
     }
+
+    button {
+        text-wrap: nowrap;
+        white-space: nowrap;
+    }
 </style>
