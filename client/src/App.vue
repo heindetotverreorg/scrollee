@@ -7,7 +7,7 @@
     
     <section
         v-show="showControls"
-        class="streams-controls"
+        class="stream-control"
     >
         <StreamControl 
             v-for="stream of activeStreams" 
@@ -15,17 +15,15 @@
             :stream-name="stream" 
             :is-bundled="isBundled"
         >
-            <div>
-                <button @click="removeStream(stream)">Remove stream</button>
-            </div>
+            <button @click="removeStream(stream)">Remove stream</button>
         </StreamControl>
     </section>
 
-    <section :class="`streams-content ${!showControls ? 'streams-content--maximized' : ''}`">
-        <div class="streams-bundled" v-if="isBundled">
+    <section :class="`stream-content ${!showControls ? 'stream-content--maximized' : ''}`">
+        <div class="stream-bundled" v-if="isBundled">
             <BundledStreams />
         </div>
-        <div class="streams-list" v-else>
+        <div class="stream-list" v-else>
             <StreamList 
                 v-for="stream of activeStreams"
                 :key="stream"
@@ -36,9 +34,9 @@
 </template>
 <script setup lang="ts">
     import StreamSetup from '@/components/StreamSetup.vue'
-    import StreamControl from '@/components/StreamsView/StreamControl.vue'
-    import StreamList from './components/StreamsView/StreamList.vue'
-    import BundledStreams from '@/components/StreamsView/BundledStreams.vue'
+    import StreamControl from '@/components/StreamView/StreamControl.vue'
+    import StreamList from './components/StreamView/StreamList.vue'
+    import BundledStreams from '@/components/StreamView/BundledStreams.vue'
     import { onMounted, ref, Ref, unref } from 'vue'
   
     const chooseStream = ref(false)
@@ -67,7 +65,7 @@
     }
 </script>
 <style scoped lang="scss">
-    .streams-content {
+    .stream-content {
         height: calc(100vh - 135px);
         overflow: hidden;
 
@@ -76,8 +74,8 @@
         }
     }
 
-    .streams-controls,
-    .streams-list {
+    .stream-control,
+    .stream-list {
         display: flex;
         height: 100%;
         gap: 10px;
@@ -90,7 +88,7 @@
         }
     }
 
-    .streams-bundled {
+    .stream-bundled {
         height: 100%;
         overflow-y: scroll;
         scroll-snap-type: y mandatory;

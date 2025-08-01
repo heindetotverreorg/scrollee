@@ -48,7 +48,7 @@
 
     .articles-list-header {
         background-color: #f0f0f0;
-        border-bottom: 1px solid #ccc;
+        border: 1px solid #ccc;
         margin-bottom: 5px;
         padding: 5px;
         position: sticky;
