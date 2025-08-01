@@ -22,7 +22,7 @@ export function useStreamControl(
         immediate: false
     })
 
-    const { setStreamArticles } = useStreamStore()
+    const { setStreamArticles, setStreamStatus } = useStreamStore()
 
     const streamStatus = ref('' as StreamStatus)
     const streamError = ref('')
@@ -40,6 +40,7 @@ export function useStreamControl(
     })
 
     watch(streamStatus, async (newStreamStatus) => {
+        setStreamStatus(streamName, newStreamStatus)
         if (newStreamStatus === StreamStatus.CONNECTED) {
             sendMessage(REQUEST_TYPES.FETCH)
         }

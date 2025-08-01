@@ -1,15 +1,16 @@
 import { defineStore } from 'pinia'
 import { ref, computed, Ref, unref } from 'vue'
 import { ArticleData } from '@shared/types'
+import { StreamStatus } from '@shared/types'
 
 export const useStreamStore = defineStore('stream', () => {
     // state
     const streams = ref({}) as Ref<Record<string, ArticleData[]>>
     const bundledStreams = ref([]) as Ref<ArticleData[]>
+    const streamStatuses = ref<Record<string, StreamStatus>>({}) as Ref<Record<string, StreamStatus>>
 
     // getters
     const getBundledStreams = computed(() => {
-        // return unref(bundledStreams)
         const streamNames = [...new Set(unref(bundledStreams).map(article => article.streamName))]
         const result: ArticleData[] = []
         let currentIndex = 0
@@ -29,6 +30,11 @@ export const useStreamStore = defineStore('stream', () => {
     const getStreamsByName = (streamName: string) => {
         return unref(streams)[streamName] || []
     }
+
+    const getStreamStatusByName = (streamName: string) => {
+        return unref(streamStatuses)[streamName] || StreamStatus.ERROR
+    }
+
     const removeStreamByName = (streamName: string) => {
         if (unref(streams)[streamName]) {
             delete unref(streams)[streamName]
@@ -71,11 +77,19 @@ export const useStreamStore = defineStore('stream', () => {
         console.log('Total bundled articles length: ', unref(bundledStreams).length)
     }
 
+    const setStreamStatus = (streamName: string, status: StreamStatus) => {
+        if (!unref(streamStatuses)[streamName]) {
+            unref(streamStatuses)[streamName] = StreamStatus.CONNECTING
+        }
+        unref(streamStatuses)[streamName] = status
+    }
 
     return {
         getBundledStreams,
         getStreamsByName,
+        getStreamStatusByName,
         setStreamArticles,
+        setStreamStatus,
         removeStreamByName
     }
 })

@@ -3,7 +3,7 @@
         <Loader v-if="isLoadingFirstTime" />
         <template v-else>
              <div class="articles-list-header">
-                <h3 class="articles-list-title">{{ streamName }}</h3>
+                <h3 class="articles-list-title">{{ streamName }} >> {{ streamStatus }}</h3>
             </div>
             <div class="articles-list">
                 <StreamArticle
@@ -20,7 +20,6 @@
     import { computed, toRefs, unref, ref } from 'vue'
     import StreamArticle from '@/components/StreamArticles/StreamArticle.vue';
     import { useStreamStore } from '@/store/streamStore'
-    import { useStreamControl } from '@/composables/useStreamControl';
     import Loader from '@/components/Loader.vue';
     import { StreamStatus } from '@shared/types';
 
@@ -30,8 +29,7 @@
 
     const { streamName } = toRefs(props)
 
-    const { getStreamsByName } = useStreamStore()
-    const { streamStatus } = useStreamControl(unref(streamName))
+    const { getStreamsByName, getStreamStatusByName } = useStreamStore()
 
     const isLoadingFirstTime = computed(() => {
         return unref(streamStatus) !== StreamStatus.SUCCESS
@@ -39,6 +37,7 @@
     })
 
     const streamData = computed(() => getStreamsByName(unref(streamName)))
+    const streamStatus = computed(() => getStreamStatusByName(unref(streamName)))
 
 </script>
 
