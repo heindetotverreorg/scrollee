@@ -136,7 +136,7 @@
         },
         "articleData": {
             "articles": {
-                "selector": ".c-articles-list__item",
+                "selector": "[class^='NewsBlockHorizontal_NewsBlockHorizontal']",
                 "useShadowRoot": false,
                 "action": "get"
             }
@@ -145,7 +145,7 @@
         "type": "dom",
         "selectors": null
     },
-    "url": "https://www.vi.nl/nieuws"
+    "url": "https://www.vi.nl/nieuws/net-binnen"
 }, 
 {
     "title": "Hacker news",

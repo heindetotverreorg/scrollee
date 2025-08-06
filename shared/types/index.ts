@@ -42,7 +42,7 @@ interface Selectors {
         selector: string;
         useShadowRoot?: boolean;
         action: 'click' | 'type' | 'get';
-        value?: string,
+        value?: string;
         waitFor?: string;
     }
 }
