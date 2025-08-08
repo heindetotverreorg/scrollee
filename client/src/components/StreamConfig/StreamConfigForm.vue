@@ -42,6 +42,7 @@
             :form-group="form.config?.articleData.articles" 
             name="Articles"
             @input="doInput('form.config.articleData.articles', $event)" />
+        <pre>{{ form }}</pre>
     </div>
 </template>
 

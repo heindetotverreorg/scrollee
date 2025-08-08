@@ -55,4 +55,9 @@ watch(value, (newValue) => {
 .form-field {
     margin-top: 10px;
 }
+
+input[type="text"] {
+    width: 100%;
+    ;
+}
 </style>

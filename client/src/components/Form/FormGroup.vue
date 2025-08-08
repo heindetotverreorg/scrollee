@@ -9,7 +9,7 @@
     </section>
 </template>
 <script lang="ts" setup>
-import { defineProps, watch } from 'vue';
+import { watch } from 'vue';
 import FormField from '@/components/Form/FormField.vue';
 
 const props = defineProps<{
