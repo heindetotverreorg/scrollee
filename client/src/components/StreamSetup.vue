@@ -2,9 +2,9 @@
     <div class="stream-setup">
         <div>
             <div class="stream-setup-buttons">
-                <button @click="addStream = true">Add stream</button>
+                <button v-if="createdStreams.length" @click="addStream = true">Add stream</button>
                 <button @click="[createStream = true, editStream = false]">Create stream</button>
-                <button @click="[createStream = true, editStream = true]">Edit stream</button>
+                <button v-if="createdStreams.length" @click="[createStream = true, editStream = true]">Edit stream</button>
             </div>
         </div>
         <div>

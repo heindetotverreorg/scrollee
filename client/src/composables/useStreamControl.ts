@@ -30,8 +30,6 @@ export function useStreamControl(
 
     const chosenStream = computed(() => createdStreams.find((stream : Stream) => stream.name === streamName) as Stream)
 
-    console.log(createdStreams, chosenStream.value)
-
     const streamRootUrl = computed(() => {
         let { url } = unref(chosenStream)
 
@@ -40,8 +38,6 @@ export function useStreamControl(
 
         return url
     })
-
-    console.log('Stream root URL:', streamRootUrl.value)
 
     watch(streamStatus, async (newStreamStatus) => {
         setStreamStatus(streamName, newStreamStatus)
