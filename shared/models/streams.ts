@@ -2,6 +2,7 @@ import { Stream, StreamConfig } from "../types";
 import presetStreamsJson from './preset-streams.json';
 
 // Type assertion for the imported JSON array
+const createdStreams = JSON.parse(localStorage.getItem('streams-config') || '[]') as Stream[]
 const presetStreams: Stream[] = presetStreamsJson as unknown as Stream[];
 
 
@@ -35,5 +36,6 @@ function createStream(
 
 export {
     createStream,
-    presetStreams
+    presetStreams,
+    createdStreams,
 }

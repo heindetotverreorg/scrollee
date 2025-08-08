@@ -1,7 +1,7 @@
 import { computed, onMounted, ref, unref, watch } from 'vue'
 import { useWebSocket } from '@vueuse/core'
 import { Stream, StreamResponse, StreamStatus, ArticleData } from '@shared/types'
-import { presetStreams } from '@shared/models/streams'
+import { createdStreams } from '@shared/models/streams'
 import { REQUEST_TYPES } from '@shared/constants'
 import { useStreamStore } from '@/store/streamStore'
 
@@ -28,7 +28,9 @@ export function useStreamControl(
     const streamError = ref('')
     const clientId = ref('')
 
-    const chosenStream = computed(() => presetStreams.find((stream : Stream) => stream.name === streamName) as Stream)
+    const chosenStream = computed(() => createdStreams.find((stream : Stream) => stream.name === streamName) as Stream)
+
+    console.log(createdStreams, chosenStream.value)
 
     const streamRootUrl = computed(() => {
         let { url } = unref(chosenStream)
@@ -38,6 +40,8 @@ export function useStreamControl(
 
         return url
     })
+
+    console.log('Stream root URL:', streamRootUrl.value)
 
     watch(streamStatus, async (newStreamStatus) => {
         setStreamStatus(streamName, newStreamStatus)

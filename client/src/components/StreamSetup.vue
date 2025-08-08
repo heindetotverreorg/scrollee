@@ -3,7 +3,8 @@
         <div>
             <div class="stream-setup-buttons">
                 <button @click="addStream = true">Add stream</button>
-                <button @click="createStream = true">Create stream</button>
+                <button @click="[createStream = true, editStream = false]">Create stream</button>
+                <button @click="[createStream = true, editStream = true]">Edit stream</button>
             </div>
         </div>
         <div>
@@ -17,7 +18,7 @@
         </div>
         <div v-if="addStream" class="stream-setup-select">
             <select v-model="selectedStream">
-                <option v-for="stream of presetStreamList" :key="stream" :value="stream">
+                <option v-for="stream of createdStreams.map(s => s.name)" :key="stream" :value="stream">
                     {{ stream }}
                 </option>
             </select>
@@ -32,24 +33,48 @@
             >
             <label for="show-controls">Show controls</label>
         </div>
-        <StreamConfigModal v-if="createStream" @close-modal="createStream = false" />
+        <StreamConfigModal
+            v-if="createStream" 
+            :edit-mode="editStream"
+            @close-modal="createStream = false"
+             @save-stream="onSaveStream" />
     </div>
 </template>
 
 <script lang="ts" setup>
     import { ref } from 'vue'
-    import { presetStreams } from '@shared/models/streams'
+    import { createdStreams } from '@shared/models/streams'
     import StreamConfigModal from '@/components/StreamConfig/StreamConfigModal.vue'
+    import { Stream } from '@shared/types'
 
     const addStream = ref(false)
     const isBundled = ref(false)
     const showControls = ref(true)
     const selectedStream = ref('')
     const createStream = ref(false)
+    const editStream = ref(false)
 
-    const presetStreamList = presetStreams.map((stream : any) => {
-        return stream.name
-    }) 
+    const onSaveStream = (form: Stream) => {
+        try {
+            if (!form.name || !form.config?.articleData.articles || !form.url) {
+                throw new Error('Invalid stream configuration');
+            }
+        } catch(e) {
+            console.log(e)
+            return
+        }
+
+        const existingIndex = createdStreams.findIndex(s => s.name === form.name);
+        
+        if (existingIndex !== -1) {
+            createdStreams[existingIndex] = form;
+        } else {
+            createdStreams.push(form);
+        }
+
+        localStorage.setItem('streams-config', JSON.stringify(createdStreams));
+        createStream.value = false;
+    };
 
 </script>
 
@@ -68,7 +93,7 @@
 
     .stream-setup-buttons {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
     }
 
 </style>

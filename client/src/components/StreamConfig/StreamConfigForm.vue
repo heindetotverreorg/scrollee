@@ -1,75 +1,63 @@
 <template>
     <div class="stream-config-form">
-        <div>
-            <input v-model="form.name" placeholder="Stream Name" />
-        </div>
-        <div>
-            <input v-model="form.url" placeholder="Stream URL" />
-        </div>
-        <div>
-            <input v-model="form.title" placeholder="Stream Title" />
-        </div>
-        <div>
-            <input type="checkbox" :value="form.config?.useLogin" @change="doInput('form.config.useLogin', $event)" />
-            <label>Use Login</label>
-        </div>
-        <div v-if="form.config?.useLogin">
-            <div>
-                <input v-model="form.config.loginData.username.selector" placeholder="Username Selector" />
-            </div>
-            <div>
-                <input v-model="form.config.loginData.username.useShadowRoot" type="checkbox" />
-                <label>Use Shadow Root</label>
-            </div>
-            <div>
-                <select v-model="form.config.loginData.username.action">
-                    <option value="type">Type</option>
-                    <option value="click">Click</option>
-                    <option value="get">Get</option>
-                </select>
-            </div>
-            <div>
-                <input v-model="form.config.loginData.username.value" placeholder="Username Value" />
-            </div>
-            <div>
-                <input v-model="form.config.loginData.username.waitFor" placeholder="Wait For" />
-            </div>
-        </div>
-        <div>
-            <input type="checkbox" :value="form.config?.hasCookieBanner" @change="doInput('form.config.hasCookieBanner', $event)" />
-            <label>Has Cookie Banner</label>
-        </div>
-        <div v-if="form.config?.hasCookieBanner">
-            <div>
-                <input v-model="form.config.cookieBannerData.selector" placeholder="Cookie Banner Selector" />
-            </div>
-            <div>
-                <input v-model="form.config.cookieBannerData.useShadowRoot" type="checkbox" />
-                <label>Use Shadow Root</label>
-            </div>
-            <div>
-                <select v-model="form.config.cookieBannerData.action">
-                    <option value="click">Click</option>
-                    <option value="type">Type</option>
-                    <option value="get">Get</option>
-                </select>
-            </div>
-            <div>
-                <input v-model="form.config.cookieBannerData.value" placeholder="Cookie Banner Value" />
-            </div>
-            <div>
-                <input v-model="form.config.cookieBannerData.waitFor" placeholder="Wait For" />
-            </div>
-        </div>
-        <div>
-            <button @click="$emit('submit', form)">Submit</button>
-        </div>
+        <FormField 
+            v-model="form.name" 
+            fieldName="Stream Name" type="text" />
+        <FormField 
+            v-model="form.url" 
+            fieldName="Stream URL" type="text" />
+        <FormField 
+            v-model="form.title" 
+            fieldName="Stream Title" type="text" />
+        <FormField 
+            :model-value="form.config?.useLogin" 
+            fieldName="Use Login" type="checkbox"  
+            @change="doInput('form.config.useLogin', $event)" />
+        <FormGroup 
+            v-if="form.config?.useLogin" 
+            :form-group="form.config.loginData.username" 
+            name="Username"
+            @input="doInput('form.config.loginData.username', $event)" />
+        <FormGroup 
+            v-if="form.config?.useLogin" 
+            :form-group="form.config.loginData.password" 
+            name="Password"
+            @input="doInput('form.config.loginData.password', $event)" />
+        <FormGroup 
+            v-if="form.config?.useLogin" 
+            :form-group="form.config.loginData.loginButton" 
+            name="Login Button"
+            @input="doInput('form.config.loginData.loginButton', $event)" />
+        <FormField 
+            :model-value="form.config?.hasCookieBanner" 
+            fieldName="Has Cookie Banner" type="checkbox" 
+            @change="doInput('form.config.hasCookieBanner', $event)" />
+        <FormGroup 
+            v-if="form.config?.hasCookieBanner" 
+            :form-group="form.config.cookieBannerData.cookieBanner" 
+            name="Cookie Banner"
+            @input="doInput('form.config.cookieBannerData.cookieBanner', $event)" />
+        <FormGroup 
+            v-if="form.config?.articleData.articles" 
+            :form-group="form.config?.articleData.articles" 
+            name="Articles"
+            @input="doInput('form.config.articleData.articles', $event)" />
     </div>
 </template>
 
 <script lang="ts" setup>
 import { Stream } from '@shared/types';
-import { reactive, Reactive } from 'vue';
+import { reactive, Reactive, watch } from 'vue';
+import FormField from '@/components/Form/FormField.vue';
+import FormGroup from '@/components/Form/FormGroup.vue';
+
+const emit = defineEmits<{
+    (e: 'input', form: Stream): void;
+}>();
+
+const props = defineProps<{
+    formToEdit?: Stream | null;
+}>();
 
 const form = reactive({
     name: '',
@@ -134,10 +122,19 @@ const doInput = (path: string, event: any) => {
     }
 }
 
+watch(form, (newForm) => {
+    emit('input', newForm)
+}, {deep: true})
+
+if (props.formToEdit) {
+    Object.assign(form, props.formToEdit);
+}
+
 </script>
 
 <style scoped>
 .stream-config-form {
-    
+    height: auto;
+    overflow: auto;
 }
 </style>

@@ -1,17 +1,54 @@
 <template>
     <section class="stream-config-modal">
         <h3>Stream configuration</h3>
-        <StreamConfigForm />
-        <button>Save</button>
-        <button @click="$emit('close-modal')">Cancel</button>
+        <FormField
+            v-if="editMode"
+            v-model="editFormName"
+            fieldName="Stream to edit"
+            placeholder="Stream to edit" 
+            :options="createdStreams.map(s => s.name)"
+            type="select" />
+        <StreamConfigForm 
+            v-if="!editMode || editMode && editFormName"
+            @input="onInput" 
+            :form-to-edit="editForm" />
+        <div class="buttons">
+            <button @click="$emit('save-stream', form)">Save</button>
+            <button @click="$emit('close-modal')">Cancel</button>
+        </div>
     </section>
     <div class="modal-bg"></div>
 </template>
 
 <script lang="ts" setup>
+import { Stream } from '@shared/types';
 import StreamConfigForm from '@/components/StreamConfig/StreamConfigForm.vue'
+import { computed, ref } from 'vue';
+import FormField from '../Form/FormField.vue';
+import { createdStreams } from '@shared/models/streams';
 
-defineEmits(['close-modal'])
+const props = defineProps<{
+    editMode?: boolean;
+}>();
+
+defineEmits<{
+    (e: 'save-stream', form: Stream): void;
+    (e: 'close-modal'): void;
+}>();
+
+const form = ref<Stream>({} as Stream);
+const editFormName = ref(''); 
+
+const editForm = computed(() => {
+    if (props.editMode && editFormName.value) {
+        return createdStreams.find(s => s.name === editFormName.value) || {} as Stream;
+    }
+    return null
+});
+
+const onInput = (newForm : Stream) => {
+    form.value = { ...newForm }; 
+};
 
 </script>
 
@@ -32,7 +69,9 @@ h3 {
 }
 
 .stream-config-modal {
-    /* Add your styles here */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
     max-width: 600px;
     margin: 0 auto;
     padding: 20px;
@@ -51,6 +90,10 @@ h3 {
 
 .stream-config-content {
     padding: 20px;
+}
+
+.buttons {
+    margin-top: auto;
 }
 
 .btn-cancel,
