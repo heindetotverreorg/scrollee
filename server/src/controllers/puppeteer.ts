@@ -3,7 +3,7 @@ import { Page, KnownDevices } from 'puppeteer';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import WebSocket from 'ws';
 import { Stream, StreamConfig, Selectors, Action, StreamResponse, StreamStatus } from '@shared/types';
-import { makeMessage } from '@/utils/make-message';
+import { makeMessage, doDelay } from '@/utils';
 
 const puppeteerConnectionController = {
     handlePuppeteerConnection: async (data: WebSocket.Data, ws: WebSocket, clientId: string) => {
@@ -77,12 +77,16 @@ const puppeteerRequestController = {
             }
         } = JSON.parse(data as string);
 
-        await page.reload({
-            waitUntil: 'networkidle2',
-        });
-        console.log('-- Page reloaded, fetching new articles...')
+        // await page.reload({
+        //     waitUntil: 'networkidle2',
+        // });
 
         const actions = await getActions(page, selectors);
+
+        console.log('-- Scrolled down, fetching new articles...')
+        // await page.evaluate(() => {
+        //     window.scrollTo(0, document.body.scrollHeight);
+        // });
 
         const articles = await doActions(actions, page)
 
