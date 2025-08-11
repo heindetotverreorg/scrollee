@@ -77,16 +77,17 @@ const puppeteerRequestController = {
             }
         } = JSON.parse(data as string);
 
-        // await page.reload({
-        //     waitUntil: 'networkidle2',
-        // });
-
         const actions = await getActions(page, selectors);
 
-        console.log('-- Scrolled down, fetching new articles...')
-        // await page.evaluate(() => {
-        //     window.scrollTo(0, document.body.scrollHeight);
-        // });
+        await page.evaluate(() => {
+            window.scrollTo({ 
+                top: document.body.scrollHeight,
+                behavior: 'smooth'
+            });
+        });
+        await doDelay(1000);
+        
+        console.log('-- Scrolled down and up, fetching new articles...');
 
         const articles = await doActions(actions, page)
 

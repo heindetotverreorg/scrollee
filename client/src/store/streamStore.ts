@@ -14,11 +14,11 @@ export const useStreamStore = defineStore('stream', () => {
         const streamNames = [...new Set(unref(bundledStreams).map(article => article.streamName))]
         const result: ArticleData[] = []
         let currentIndex = 0
-        
+
         while (result.length < unref(bundledStreams).length) {
             const currentStreamName = streamNames[currentIndex]
             const article = unref(bundledStreams).find(
-                a => a.streamName === currentStreamName && !result.includes(a)
+                a => a.streamName === currentStreamName && !result.includes(a) && result.includes(a) === false
             )
             if (article) result.push(article)
             currentIndex = (currentIndex + 1) % streamNames.length
@@ -90,6 +90,7 @@ export const useStreamStore = defineStore('stream', () => {
         getStreamStatusByName,
         setStreamArticles,
         setStreamStatus,
-        removeStreamByName
+        removeStreamByName,
+        streams
     }
 })

@@ -22,7 +22,7 @@ export function useStreamControl(
         immediate: false
     })
 
-    const { setStreamArticles, setStreamStatus } = useStreamStore()
+    const { setStreamArticles, setStreamStatus, streams } = useStreamStore()
 
     const streamStatus = ref('' as StreamStatus)
     const streamError = ref('')
@@ -47,6 +47,11 @@ export function useStreamControl(
         }
         if (newStreamStatus === StreamStatus.ERROR) {
             sendMessage(REQUEST_TYPES.CONNECT)
+        }
+        if (newStreamStatus === StreamStatus.SUCCESS) {
+            if (unref(streams)[streamName] && unref(streams)[streamName].length < 5) {
+                sendMessage(REQUEST_TYPES.FETCH)
+            }
         }
     })
 
