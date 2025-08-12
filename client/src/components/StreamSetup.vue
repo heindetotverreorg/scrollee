@@ -82,18 +82,16 @@
 
     const handleClickOutside = (event: MouseEvent) => {
         const addStreamButton = document.querySelector('#add-stream-button');
-        const selectElement = document.querySelector('.stream-setup-select');
+        const selectElement = document.querySelector('.stream-setup-select');;
         if (!addStreamButton?.contains(event.target as Node) && !selectElement?.contains(event.target as Node)) {
             addStream.value = false;
         }
     };
 
     window.addEventListener('click', handleClickOutside);
-    window.addEventListener('blur', () => addStream.value = false);
 
     onBeforeUnmount(() => {
         window.removeEventListener('click', handleClickOutside);
-        window.removeEventListener('blur', () => addStream.value = false);
     });
 
 </script>

@@ -20,6 +20,11 @@
     </section>
 
     <section :class="`stream-content ${!showControls ? 'stream-content--maximized' : ''}`">
+        <button
+            @click="connect()"
+        >
+            Connect
+        </button>
         <div class="stream-bundled" v-if="isBundled">
             <BundledStreams />
         </div>
@@ -35,7 +40,7 @@
             </div>
             <div v-if="!hasStreamConfig" class="no-streams">
                 <p>No streams created yet. Please create a stream or enter your unique stream code below:</p>
-                <input placeholder="Enter stream code" type="text" />
+                <input placeholder="Enter stream code" type="text" v-model="uniqueID" />
             </div>
         </div>
     </section>
@@ -53,6 +58,7 @@
     const selectedStream = ref('')
     const activeStreams : Ref<string[]> = ref([])
     const streamConfig = ref({})
+    const uniqueID = ref('')
 
     onMounted(() => {
         activeStreams.value = localStorage.getItem('streams') 
@@ -75,6 +81,25 @@
         chooseStream.value = false
 
         localStorage.setItem('streams', JSON.stringify(unref(activeStreams)));
+    }
+
+    const connect = async () => {
+        try {
+            const response = await fetch('http://localhost:3001/db/connect', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ uniqueID: uniqueID.value })
+            });
+            const data = await response.json();
+            if (data) {
+                console.log(data)
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
     }
   
     const removeStream = (streamName : string) => {

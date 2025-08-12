@@ -13,7 +13,6 @@ const host = serverConfig.wsHost;
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 // Set up routes
 setRoutes(app, express);
 
