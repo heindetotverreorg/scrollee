@@ -84,8 +84,10 @@
     }
 
     const connect = async () => {
+        const currentDomain = import.meta.env.VITE_SERVER_DOMAIN
+
         try {
-            const response = await fetch('http://localhost:3001/db/connect', {
+            const response = await fetch(`${currentDomain}/db/connect`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

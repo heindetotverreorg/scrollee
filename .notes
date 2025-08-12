@@ -1,0 +1,8 @@
+ Database structure scroll
+Separate document for all possible configs:
+ - Config A, config B, config C etc.
+Seperate document for stream config collections per unique id
+ - Unique ID -> Array of stream names, another unique ID -> another Array of streamNames
+
+So fetch streamNames from uniqueID, then fetch all configs matching those names, return those configs to client
+

@@ -6,7 +6,7 @@ const { Schema } = mongoose
 const mongoController = {
     connectToMongoClient: async (req: Request, res: Response) => {
         try {
-            const connectionString = `mongodb://localhost:${process.env.MONGO_PORT as string}`;
+            const connectionString = `mongodb://${process.env.MONGO_URL as string}`;
 
             await mongoose.connect(connectionString);
 
