@@ -10,8 +10,8 @@ services:
       - PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
       - NODE_ENV=production
     ports:
-      - "0.0.0.0:3001:3001"
-      - "0.0.0.0:3002:3002"
+      - "3001:3001"
+      - "3002:3002"
     networks:
       - scrollee-net
     command: node dist/server/src/app.js
