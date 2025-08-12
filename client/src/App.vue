@@ -35,6 +35,7 @@
             </div>
             <div v-if="!hasStreamConfig" class="no-streams">
                 <p>No streams created yet. Please create a stream or enter your unique stream code below:</p>
+                <input placeholder="Enter stream code" type="text" />
             </div>
         </div>
     </section>
