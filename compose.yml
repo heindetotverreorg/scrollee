@@ -15,6 +15,12 @@ services:
     networks:
       - scrollee-net
     command: node dist/server/src/app.js
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    networks:
+      - scrollee-net
 
 networks:
   scrollee-net:
