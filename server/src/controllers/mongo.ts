@@ -7,10 +7,16 @@ const mongoController = {
     connectToMongoClient: async (req: Request, res: Response) => {
         try {
             console.log("Connecting to MongoDB...");
-            
+
             const connectionString = `mongodb://${process.env.MONGO_URL as string}`;
 
-            await mongoose.connect(connectionString);
+            console.log("MongoDB connection string:", connectionString);
+
+            await mongoose.connect(connectionString, {
+                serverSelectionTimeoutMS: 5000, // Timeout after 5 seconds if no server is found
+                socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+                directConnection: true, // Use direct connection to the MongoDB server
+            });
 
             console.log("Connected to MongoDB successfully");
 
