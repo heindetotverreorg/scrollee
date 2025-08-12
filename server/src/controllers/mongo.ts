@@ -8,12 +8,7 @@ const mongoController = {
         try {
             console.log("Connecting to MongoDB...");
 
-            const { connectString } = req.body;
-            console.log("Received connection string:", connectString);
-
-            const connectionString = connectString || `mongodb://${process.env.MONGO_URL as string}`;
-
-            console.log("MongoDB connection string:", connectionString);
+            const connectionString = `mongodb://${process.env.MONGO_URL as string}`;
 
             await mongoose.connect(connectionString, {
                 serverSelectionTimeoutMS: 5000, // Timeout after 5 seconds if no server is found

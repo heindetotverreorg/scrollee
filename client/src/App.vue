@@ -26,11 +26,6 @@
             >
                 Connect
             </button>
-            <input
-                type="text"
-                v-model="connectString"
-                placeholder="mongo connect string"
-            />
             <pre v-if="data">data: {{ data }}</pre>
         </div>
         <div class="stream-bundled" v-if="isBundled">
@@ -67,7 +62,6 @@
     const activeStreams : Ref<string[]> = ref([])
     const streamConfig = ref({})
     const uniqueID = ref('')
-    const connectString = ref('mongodb://localhost:27017')
     const data = ref('')
 
     onMounted(() => {
@@ -103,7 +97,7 @@
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
-                body: JSON.stringify({ uniqueID: uniqueID.value, connectString: connectString.value })
+                body: JSON.stringify({ uniqueID: uniqueID.value})
             });
             const json = await response.json();
             if (json) {
