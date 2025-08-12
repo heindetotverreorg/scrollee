@@ -2,6 +2,10 @@
     <section class="articles-list-wrapper">
         <div class="articles-list-header">
             <h3 class="articles-list-title">{{ streamName }} >> {{ streamStatus }}</h3>
+            <div class="controls">
+                <button @click="scrollToTop">^</button>
+                <button @click="$emit('on-handle-remove-stream', streamName)">X</button>
+            </div>
         </div>
         <Loader v-if="isLoadingFirstTime" />
         <template v-else>
@@ -39,6 +43,13 @@
     const streamData = computed(() => getStreamsByName(unref(streamName)))
     const streamStatus = computed(() => getStreamStatusByName(unref(streamName)))
 
+    const scrollToTop = () => {
+        const articlesList = document.querySelector('.articles-list');
+        if (articlesList) {
+            articlesList.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
+
 </script>
 
 <style scoped>
@@ -58,6 +69,8 @@
     }
 
     .articles-list-header {
+        display: flex;
+        flex-wrap: nowrap;
         background-color: #f0f0f0;
         border: 1px solid #ccc;
         margin-bottom: 5px;
@@ -69,6 +82,21 @@
 
         h3 {
             margin: 0;
+        }
+
+        .articles-list-title {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
+        }
+
+        .controls {
+            margin-left: auto;
+
+            button {
+                margin-left: 5px;
+            }
         }
     }
 </style>

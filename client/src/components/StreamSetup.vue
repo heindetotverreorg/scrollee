@@ -2,9 +2,11 @@
     <div class="stream-setup">
         <div>
             <div class="stream-setup-buttons">
-                <button v-if="createdStreams.length" @click="addStream = true">Add stream</button>
-                <button @click="[createStream = true, editStream = false]">Create stream</button>
-                <button v-if="createdStreams.length" @click="[createStream = true, editStream = true]">Edit stream</button>
+                <button id="add-stream-button" v-if="createdStreams.length" @click="addStream = true">Add stream</button>
+                <div>
+                    <button @click="[createStream = true, editStream = false]">Create stream</button>
+                    <button v-if="createdStreams.length" @click="[createStream = true, editStream = true]">Edit stream</button>
+                </div>
             </div>
         </div>
         <div>
@@ -42,14 +44,16 @@
 </template>
 
 <script lang="ts" setup>
-    import { ref } from 'vue'
+    import { ref, onBeforeUnmount } from 'vue'
     import { createdStreams } from '@shared/models/streams'
     import StreamConfigModal from '@/components/StreamConfig/StreamConfigModal.vue'
     import { Stream } from '@shared/types'
 
+    defineEmits(['on-handle-add-stream', 'on-handle-is-bundled', 'on-handle-show-controls']);
+
     const addStream = ref(false)
     const isBundled = ref(false)
-    const showControls = ref(true)
+    const showControls = ref(false)
     const selectedStream = ref('')
     const createStream = ref(false)
     const editStream = ref(false)
@@ -76,6 +80,22 @@
         createStream.value = false;
     };
 
+    const handleClickOutside = (event: MouseEvent) => {
+        const addStreamButton = document.querySelector('#add-stream-button');
+        const selectElement = document.querySelector('.stream-setup-select');
+        if (!addStreamButton?.contains(event.target as Node) && !selectElement?.contains(event.target as Node)) {
+            addStream.value = false;
+        }
+    };
+
+    window.addEventListener('click', handleClickOutside);
+    window.addEventListener('blur', () => addStream.value = false);
+
+    onBeforeUnmount(() => {
+        window.removeEventListener('click', handleClickOutside);
+        window.removeEventListener('blur', () => addStream.value = false);
+    });
+
 </script>
 
 <style scoped>
@@ -92,6 +112,7 @@
     }
 
     .stream-setup-buttons {
+        align-items: baseline;;
         display: flex;
         flex-direction: row;
     }

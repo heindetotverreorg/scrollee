@@ -28,7 +28,14 @@
                 v-for="stream of activeStreams"
                 :key="stream"
                 :stream-name="stream"
+                @on-handle-remove-stream="removeStream"
             />
+            <div v-if="!activeStreams.length && hasStreamConfig" class="no-streams">
+                <p>No streams added yet. Please add a stream.</p>
+            </div>
+            <div v-if="!hasStreamConfig" class="no-streams">
+                <p>No streams created yet. Please create a stream or enter your unique stream code below:</p>
+            </div>
         </div>
     </section>
 </template>
@@ -37,19 +44,29 @@
     import StreamControl from '@/components/StreamView/StreamControl.vue'
     import StreamList from './components/StreamView/StreamList.vue'
     import BundledStreams from '@/components/StreamView/BundledStreams.vue'
-    import { onMounted, ref, Ref, unref } from 'vue'
+    import { computed, onMounted, ref, Ref, unref } from 'vue'
   
     const chooseStream = ref(false)
     const isBundled = ref(false)
     const showControls = ref(true)
     const selectedStream = ref('')
     const activeStreams : Ref<string[]> = ref([])
+    const streamConfig = ref({})
 
     onMounted(() => {
         activeStreams.value = localStorage.getItem('streams') 
             ? JSON.parse(localStorage.getItem('streams') || '[]') 
             : []
+
+        streamConfig.value = localStorage.getItem('streams-config') 
+            ? JSON.parse(localStorage.getItem('streams-config') || '{}') 
+            : {}
+        
     })
+
+    const hasStreamConfig = computed(() => {
+        return Object.keys(streamConfig.value).length > 0;
+    });
   
     const addStream = (streamName : string) => {
         activeStreams.value.push(streamName)

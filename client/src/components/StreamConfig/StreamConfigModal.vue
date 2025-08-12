@@ -3,6 +3,20 @@
         <h3>Stream configuration</h3>
         <FormField
             v-if="editMode"
+            v-model="saveStreams"
+            fieldName="Save streams"
+            type="checkbox" />
+        <FormField
+            v-if="editMode && saveStreams"
+            v-model="uniqueStreamsKey"
+            fieldName="Unique streams key (click to copy)"
+            type="text"
+            @click="copyToClipBoard" />
+        <div v-if="showTooltip" class="tooltip">
+            Unique streams key copied to clipboard!
+        </div>
+        <FormField
+            v-if="editMode"
             v-model="editFormName"
             fieldName="Stream to edit"
             placeholder="Stream to edit" 
@@ -38,6 +52,9 @@ defineEmits<{
 
 const form = ref<Stream>({} as Stream);
 const editFormName = ref(''); 
+const saveStreams = ref<boolean>(false);
+const uniqueStreamsKey = ref(crypto.randomUUID());
+const showTooltip = ref(false); 
 
 const editForm = computed(() => {
     if (props.editMode && editFormName.value) {
@@ -45,6 +62,17 @@ const editForm = computed(() => {
     }
     return null
 });
+
+const copyToClipBoard = async () => {
+    try {
+        await navigator.clipboard.writeText(uniqueStreamsKey.value);
+        console.log('Unique streams key copied to clipboard');
+        showTooltip.value = true;
+        setTimeout(() => showTooltip.value = false, 2000);
+    } catch (err) {
+        console.error('Failed to copy unique streams key: ', err);
+    }
+};
 
 const onInput = (newForm : Stream) => {
     form.value = { ...newForm }; 
