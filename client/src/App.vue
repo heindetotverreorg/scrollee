@@ -84,7 +84,7 @@
     }
 
     const connect = async () => {
-        const currentDomain = import.meta.env.VITE_SERVER_DOMAIN
+        const currentDomain = import.meta.env.VITE_SERVER_DOMAIN || '';
 
         try {
             const response = await fetch(`${currentDomain}/db/connect`, {
