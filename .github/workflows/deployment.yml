@@ -10,7 +10,7 @@ env:
   IMAGE_PATH: ${{ secrets.DOCKER_NAMESPACE }}/scrollee:latest
   IMAGE_NAME: scrollee
   USER_NAME: ${{ secrets.DOCKER_NAMESPACE }}
-jobs: 
+jobs:
   build-image:
     name: Build image
     runs-on: self-hosted
