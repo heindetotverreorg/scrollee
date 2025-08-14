@@ -7,6 +7,7 @@ on:
       - wiki/**
       - .github/workflows/publish-wiki.yml
       - .github/actions/push-to-wiki/action.yml
+      - .github/actions/push-to-wiki/try-own
 concurrency:
   group: publish-wiki
   cancel-in-progress: true
