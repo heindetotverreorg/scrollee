@@ -91,6 +91,7 @@ runs:
   steps:
     - name: Test permissions
       run: '"${GITHUB_ACTION_PATH%/}/test.sh"'
+      shell: bash
     # - id: main
     #   run: '"${GITHUB_ACTION_PATH%/}/cliw"'
     #   shell: bash
