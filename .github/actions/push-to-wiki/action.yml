@@ -89,6 +89,8 @@ outputs:
 runs:
   using: composite
   steps:
+    - name: Ensure test.sh is executable
+      run: chmod +x .github/actions/push-to-wiki/test.sh
     - name: Test permissions
       run: '"${GITHUB_ACTION_PATH%/}/test.sh"'
       shell: bash
