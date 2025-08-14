@@ -1,9 +1,5 @@
-#!/bin/sh
-# Copyright 2023 Jacob Hummer
-# SPDX-License-Identifier: Apache-2.0
-# Based on https://github.com/jcbhmr/deno_wrapper
 echo $GITHUB_ACTOR
-WIKI_COMMIT_MESSAGE='Automatically publish wiki'
+WIKI_COMMIT_MESSAGE=$COMMIT_MESSAGE
 GIT_REPOSITORY_URL="https://${GITHUB_TOKEN}@${GITHUB_SERVER_URL#https://}/${GITHUB_REPOSITORY}.wiki.git"
 WIKI_DIR="${WIKI}"
 
