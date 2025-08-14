@@ -1,0 +1,21 @@
+name: Publish wiki
+on:
+  push:
+    branches: 
+      - origin/feature/implement-database
+    paths:
+      - wiki/**
+      - .github/workflows/publish-wiki.yml
+concurrency:
+  group: publish-wiki
+  cancel-in-progress: true
+permissions:
+  contents: write
+jobs:
+  publish-wiki:
+    runs-on: base-dind-ubuntu
+    steps:
+      - name: 🔎 Checkout
+        uses: actions/checkout@v4
+      - name: Push to Wiki
+        uses: ./.github/actions/push-to-wiki

@@ -60,7 +60,7 @@ const props = defineProps<{
     formToEdit?: Stream | null;
 }>();
 
-const form = reactive({
+const form = reactive(<Stream>{
     name: '',
     url: '',
     title: '',
@@ -112,7 +112,7 @@ const form = reactive({
         refreshInterval: 120000,
         type: 'dom'
     }
-}) as Reactive<Stream>
+})
  
 const doInput = (path: string, event: any) => {
     if (form.config && path === 'form.config.useLogin') {
