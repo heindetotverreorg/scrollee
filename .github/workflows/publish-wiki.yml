@@ -13,7 +13,7 @@ permissions:
   contents: write
 jobs:
   publish-wiki:
-    runs-on: ubuntu:latest
+    runs-on: ubuntu-latest
     steps:
       - name: 🔎 Checkout
         uses: actions/checkout@v4
