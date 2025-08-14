@@ -28,8 +28,7 @@ echo "Committing and pushing changes"
     git config user.email 41898282+github-actions[bot]@users.noreply.github.com
     git add .
     git commit -m "$WIKI_COMMIT_MESSAGE"
-    # git push --set-upstream "$GIT_REPOSITORY_URL" master
-    git push -f origin master
+    git push --set-upstream "$GIT_REPOSITORY_URL" master
 ) || exit 1
 
 rm -rf "$tmp_dir"
