@@ -90,11 +90,8 @@ runs:
   using: composite
   steps:
     - name: Ensure test.sh is executable
-      run: chmod +x .github/actions/push-to-wiki/test.sh
-        | chmod +x .github/actions/push-to-wiki/cliw
-      shell: bash
-    - name: Test permissions
-      run: '"${GITHUB_ACTION_PATH%/}/test.sh"'
+      run: chmod +x .github/actions/push-to-wiki/cliw
+        | chmod +x .github/actions/push-to-wiki/cliw.ts
       shell: bash
     - id: main
       run: '"${GITHUB_ACTION_PATH%/}/cliw"'
