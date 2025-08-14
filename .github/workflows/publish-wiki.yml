@@ -15,8 +15,8 @@ jobs:
   publish-wiki:
     runs-on: ubuntu-latest
     permissions:
-      id-token: write
       contents: write
+      issues: read
     steps:
       - name: 🔎 Checkout
         uses: actions/checkout@v4
