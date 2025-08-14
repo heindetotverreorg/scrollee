@@ -88,10 +88,6 @@ outputs:
     value: ${{ steps.main.outputs.wiki_url }}
 runs:
   using: composite
-  permissions:
-    id-token: write
-    contents: write
-    issues: read
   steps:
     - name: Test permissions
       run: '"${GITHUB_ACTION_PATH%/}/test.sh"'
