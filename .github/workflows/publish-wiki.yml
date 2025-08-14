@@ -18,4 +18,4 @@ jobs:
       - name: 🔎 Checkout
         uses: actions/checkout@v4
       - name: Push to Wiki
-        uses: andrew-chen-wang/github-wiki-action@v4
+        uses: ./.github/actions/push-to-wiki
