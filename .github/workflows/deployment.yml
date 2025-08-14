@@ -10,8 +10,28 @@ env:
   IMAGE_NAME: scrollee
   USER_NAME: ${{ secrets.DOCKER_NAMESPACE }}
 jobs: 
-  build-image:
-    name: Build image
+  build:
+    name: Build and push image
+    runs-on: self-hosted
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to Docker Registry
+        uses: docker/login-action@v2
+        with:
+          username: ${{ env.USER_NAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./docker-compose.yml
+          push: true
+          tags: ${{ env.IMAGE_PATH }}
+  deploy:
+    needs: build
     runs-on: self-hosted
     steps:
       - name: Setup ssh
@@ -19,39 +39,55 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-      - name: Checkout Code
+      - name: Deploy to Server
         run: |
           ssh ${{ env.USER_NAME }}@${{ secrets.SERVER_HOST }} -p 22 -o ConnectTimeout="10" -o StrictHostKeyChecking=no <<'ENDSSH'
-          rm -rf ${{ env.IMAGE_NAME }}
-          mkdir -p ~/${{ env.IMAGE_NAME }}
-          cd ~/${{ env.IMAGE_NAME }}
-          git init
-          git remote add origin ${{ env.REPO }}
-          git fetch origin
-          git checkout ${{ github.ref_name }}
-          ENDSSH
-      - name: Build image
-        run: |
-          ssh ${{ env.USER_NAME }}@${{ secrets.SERVER_HOST }} -p 22 -o ConnectTimeout="10" -o StrictHostKeyChecking=no <<'ENDSSH'
-          cd ~/${{ env.IMAGE_NAME }}
+          docker pull ${{ env.IMAGE_PATH }}
           docker compose down
           docker system prune -af
-          docker build -t ${{ env.IMAGE_PATH }} .
-          ENDSSH
-  restart-service:
-    needs: build-image
-    name: Restart the docker service
-    runs-on: self-hosted
-    steps:
-      - name: Setup ssh
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-      - name: Restart service
-        run: |
-          ssh ${{ env.USER_NAME }}@${{ secrets.SERVER_HOST }} -p 22 -o ConnectTimeout="10" -o StrictHostKeyChecking=no <<'ENDSSH'
-          cd ~/${{ env.IMAGE_NAME }}
           docker compose up -d
-          find . -mindepth 1 ! -name 'compose.yml' -exec rm -rf {} +
           ENDSSH
+          
+  # Uncomment the following sections if you want to use SSH for deployment
+
+  #     - name: Setup ssh
+  #       run: |
+  #         mkdir -p ~/.ssh
+  #         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+  #         chmod 600 ~/.ssh/id_rsa
+  #     - name: Checkout Code
+  #       run: |
+  #         ssh ${{ env.USER_NAME }}@${{ secrets.SERVER_HOST }} -p 22 -o ConnectTimeout="10" -o StrictHostKeyChecking=no <<'ENDSSH'
+  #         rm -rf ${{ env.IMAGE_NAME }}
+  #         mkdir -p ~/${{ env.IMAGE_NAME }}
+  #         cd ~/${{ env.IMAGE_NAME }}
+  #         git init
+  #         git remote add origin ${{ env.REPO }}
+  #         git fetch origin
+  #         git checkout ${{ github.ref_name }}
+  #         ENDSSH
+  #     - name: Build image
+  #       run: |
+  #         ssh ${{ env.USER_NAME }}@${{ secrets.SERVER_HOST }} -p 22 -o ConnectTimeout="10" -o StrictHostKeyChecking=no <<'ENDSSH'
+  #         cd ~/${{ env.IMAGE_NAME }}
+  #         docker compose down
+  #         docker system prune -af
+  #         docker build -t ${{ env.IMAGE_PATH }} .
+  #         ENDSSH
+  # restart-service:
+  #   needs: build-image
+  #   name: Restart the docker service
+  #   runs-on: self-hosted
+  #   steps:
+  #     - name: Setup ssh
+  #       run: |
+  #         mkdir -p ~/.ssh
+  #         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+  #         chmod 600 ~/.ssh/id_rsa
+  #     - name: Restart service
+  #       run: |
+  #         ssh ${{ env.USER_NAME }}@${{ secrets.SERVER_HOST }} -p 22 -o ConnectTimeout="10" -o StrictHostKeyChecking=no <<'ENDSSH'
+  #         cd ~/${{ env.IMAGE_NAME }}
+  #         docker compose up -d
+  #         find . -mindepth 1 ! -name 'compose.yml' -exec rm -rf {} +
+  #         ENDSSH
