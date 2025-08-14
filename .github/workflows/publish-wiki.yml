@@ -16,7 +16,7 @@ permissions:
     issues: read
 jobs:
   publish-wiki:
-    runs-on: self-hosted\
+    runs-on: self-hosted
     permissions:
       id-token: write
       contents: write
