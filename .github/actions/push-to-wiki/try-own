@@ -4,7 +4,7 @@
 # Based on https://github.com/jcbhmr/deno_wrapper
 echo $GITHUB_ACTOR
 WIKI_COMMIT_MESSAGE='Automatically publish wiki'
-GIT_REPOSITORY_URL="https://${GH_PERSONAL_ACCESS_TOKEN}@${GITHUB_SERVER_URL#https://}/$GITHUB_REPOSITORY.wiki.git"
+GIT_REPOSITORY_URL="https://${GITHUB_TOKEN}@${GITHUB_SERVER_URL#https://}/${GITHUB_REPOSITORY}.wiki.git"
 echo "Checking out wiki repository"
 tmp_dir=$(mktemp -d -t ci-XXXXXXXXXX)
 (

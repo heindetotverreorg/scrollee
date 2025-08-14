@@ -96,9 +96,11 @@ runs:
       run: '"${GITHUB_ACTION_PATH%/}/try-own"'
       shell: bash
       env:
-        GH_PERSONAL_ACCESS_TOKEN: ${{ inputs.token }}
+        GITHUB_TOKEN: ${{ inputs.token }}
         GITHUB_SERVER_URL:  ${{ inputs.github-server-url }}
         GITHUB_REPOSITORY: ${{ github.repository }}
+        WIKI: ${{ inputs.path }}
+
     # - id: main
     #   run: '"${GITHUB_ACTION_PATH%/}/cliw"'
     #   shell: bash
