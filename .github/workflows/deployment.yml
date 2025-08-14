@@ -3,8 +3,6 @@ on:
   push: 
     branches: 
       - main
-      - 'feature-**'
-      - 'feature/**'
   workflow_dispatch:
 env:
   REPO: https://github.com/${{ github.repository }}.git
