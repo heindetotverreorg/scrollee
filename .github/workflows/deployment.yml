@@ -3,6 +3,8 @@ on:
   push: 
     branches: 
       - main
+      - 'feature-**'
+      - 'feature/**'
   workflow_dispatch:
 env:
   REPO: https://github.com/${{ github.repository }}.git
@@ -47,7 +49,7 @@ jobs:
           docker system prune -af
           docker compose up -d
           ENDSSH
-          
+
   # Uncomment the following sections if you want to use SSH for deployment
 
   #     - name: Setup ssh
