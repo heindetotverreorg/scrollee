@@ -6,6 +6,7 @@ on:
     paths:
       - wiki/**
       - .github/workflows/publish-wiki.yml
+      - .github/actions/push-to-wiki/action.yml
 concurrency:
   group: publish-wiki
   cancel-in-progress: true
