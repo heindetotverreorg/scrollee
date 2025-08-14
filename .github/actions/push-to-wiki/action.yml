@@ -91,7 +91,7 @@ runs:
   steps:
     - name: Ensure test.sh is executable
       run: chmod +x .github/actions/push-to-wiki/cliw
-        | chmod +x .github/actions/push-to-wiki/cliw.ts
+        | chmod +x .github/actions/push-to-wiki/cli.ts
       shell: bash
     - id: main
       run: '"${GITHUB_ACTION_PATH%/}/cliw"'
