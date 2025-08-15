@@ -11,12 +11,6 @@ env:
   IMAGE_NAME: ${{ github.repository }}
   USER_NAME: ${{ github.actor }}
 jobs: 
-  whoami:
-    name: Who am I?
-    runs-on: self-hosted
-    steps:
-      - name: Print user
-        run: whoami
   build-image:
     name: Build image
     runs-on: self-hosted
