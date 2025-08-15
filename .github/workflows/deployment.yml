@@ -11,14 +11,24 @@ env:
   IMAGE_NAME: ${{ github.repository }}
   USER_NAME: ${{ github.actor }}
 jobs: 
+  whoami:
+    name: Who am I?
+    runs-on: self-hosted
+    steps:
+      - name: Print user
+        run: whoami
   build-image:
     name: Build image
     runs-on: self-hosted
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+      - name: Print user
+        run: whoami
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v2
+      - name: Print user
+        run: whoami
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
