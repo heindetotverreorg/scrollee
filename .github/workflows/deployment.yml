@@ -41,11 +41,10 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
       - name: Restart service
         run: |
-          ssh ${{ env.USER_NAME }}@${{ secrets.SERVER_HOST }} -p 22
-          -o ConnectTimeout="10" -o StrictHostKeyChecking=no <<'ENDSSH'
+          ssh -i ~/.ssh/id_rsa ${{ env.USER_NAME }}@${{ secrets.SERVER_HOST }} -p 22 -o ConnectTimeout="10" -o StrictHostKeyChecking=no <<'ENDSSH'
           cd ~/${{ env.IMAGE_NAME }}
           docker compose down
-          docker compose up -d
+          docker compose up -d 
           find . -mindepth 1 ! -name 'compose.yml' -exec rm -rf {} +
           docker system prune -af
           ENDSSH
