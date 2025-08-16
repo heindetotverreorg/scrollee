@@ -1,7 +1,7 @@
 services:
   scrollee:
     platform: linux/arm64
-    image: ${IMAGE}
+    image: ${USER}/${IMAGE}
     restart: unless-stopped
     env_file:
       - shared/env/.env.production
