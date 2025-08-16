@@ -33,8 +33,10 @@ jobs:
         #   cache-to: type=inline
       - name: Restart service
         run: |
-          docker compose up -d 
+          IMAGE=${{ env.IMAGE_PATH }} 
+          docker compose down
           docker system prune -af
+          docker compose up -d
   # restart-service:
   #   needs: build-image
   #   name: Restart the docker service
