@@ -28,7 +28,7 @@ jobs:
         with:
           push: true
           tags: ${{ env.IMAGE_NAME }}
-          cache-from: type=registry,ref=heindetotverre/scrollee:latest
+          cache-from: type=registry,ref=${{ env.IMAGE_NAME }}
           cache-to: type=inline
       - name: Restart service
         run: |
