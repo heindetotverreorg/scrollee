@@ -7,7 +7,6 @@ on:
   workflow_dispatch:
 env:
   REPO: https://github.com/${{ github.repository }}.git
-  IMAGE_PATH: ${{ github.repository }}:latest
   IMAGE_NAME: ${{ github.actor }}/scrollee:latest
   USER_NAME: ${{ github.actor }}
 jobs: 
@@ -28,15 +27,15 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ env.USER_NAME }}/${{ env.IMAGE_PATH }}
+          tags: ${{ env.IMAGE_NAME }}
           cache-from: type=registry,ref=heindetotverre/scrollee:latest
           cache-to: type=inline
       - name: Restart service
         run: |
           echo "Current images:"
           docker images
-          USER=${{ env.USER_NAME }} IMAGE=${{ env.IMAGE_PATH }} docker compose down
-          USER=${{ env.USER_NAME }} IMAGE=${{ env.IMAGE_PATH }} docker compose up -d
+          USER=${{ env.USER_NAME }} IMAGE=${{ env.IMAGE_NAME }} docker compose down
+          USER=${{ env.USER_NAME }} IMAGE=${{ env.IMAGE_NAME }} docker compose up -d
   # restart-service:
   #   needs: build-image
   #   name: Restart the docker service
