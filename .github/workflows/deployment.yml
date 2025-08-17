@@ -8,7 +8,7 @@ on:
 env:
   REPO: https://github.com/${{ github.repository }}.git
   IMAGE_PATH: ${{ github.repository }}:latest
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: ${{ github.actor }}/scrollee:latest
   USER_NAME: ${{ github.actor }}
 jobs: 
   build-image:
@@ -33,6 +33,8 @@ jobs:
           cache-to: type=inline
       - name: Restart service
         run: |
+          echo "Current images:"
+          docker images
           USER=${{ env.USER_NAME }} IMAGE=${{ env.IMAGE_PATH }} docker compose down
           USER=${{ env.USER_NAME }} IMAGE=${{ env.IMAGE_PATH }} docker compose up -d
   # restart-service:
