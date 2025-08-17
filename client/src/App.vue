@@ -39,10 +39,10 @@
                 @on-handle-remove-stream="removeStream"
             />
             <div v-if="!activeStreams.length && hasStreamConfig" class="no-streams">
-                <p>No streams added yet. Add a stream.</p>
+                <p>No streams added yet. Please add a stream.</p>
             </div>
             <div v-if="!hasStreamConfig" class="no-streams">
-                <p>No streams created yet. Create a stream or enter your unique stream code below:</p>
+                <p>No streams created yet. Please create a stream or enter your unique stream code below:</p>
                 <input placeholder="Enter stream code" type="text" v-model="uniqueID" />
             </div>
         </div>
