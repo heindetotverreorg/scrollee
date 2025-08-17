@@ -29,14 +29,20 @@ jobs:
           tags: ${{ env.IMAGE_NAME }}
           cache-from: type=registry,ref=${{ env.IMAGE_NAME }}
           cache-to: type=inline
-  restart:
-    name: Restart service
-    runs-on: self-hosted
-    needs: build
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
       - name: Restart service
-        run: |
-          IMAGE=${{ env.IMAGE_NAME }} docker compose down
-          IMAGE=${{ env.IMAGE_NAME }} docker compose up -d
+        uses: hoverkraft-tech/compose-action@v2.0.1
+        with:
+          compose-file: "./compose.yml"
+        env:
+          IMAGE: ${{ env.IMAGE_NAME }}
+  # restart:
+  #   name: Restart service
+  #   runs-on: self-hosted
+  #   needs: build
+  #   steps:
+  #     - name: Checkout Code
+  #       uses: actions/checkout@v3
+  #     - name: Restart service
+  #       run: |
+  #         IMAGE=${{ env.IMAGE_NAME }} docker compose down
+  #         IMAGE=${{ env.IMAGE_NAME }} docker compose up -d
